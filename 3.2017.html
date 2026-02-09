@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2017：破冰·试水 - 主流媒体的青春进化论</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=AlibabaPuHuiTi:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入Chart.js用于图表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'AlibabaPuHuiTi', -apple-system, sans-serif;
+            color: #fff;
+        }
+
+        #page-container {
+            width: 640px;
+            height: 1008px;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            background: url('军装照.png') no-repeat center center;
+            background-size: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 半透明遮罩层，使文字更清晰 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 26, 0.85);
+            z-index: 1;
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(30, 30, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-3px);
+            background: rgba(30, 30, 46, 0.9);
+            border-color: rgba(211, 47, 47, 0.5);
+        }
+
+        .back-icon {
+            font-size: 1.5rem;
+            color: #D32F2F;
+        }
+
+        /* 主内容容器 */
+        .main-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 0 80px 0;
+        }
+
+        /* 页面标题区域 */
+        .page-header {
+            padding: 90px 20px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .year-badge {
+            display: inline-block;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #D32F2F;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(211, 47, 47, 0.5);
+            position: relative;
+        }
+
+        .year-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #D32F2F, transparent);
+            border-radius: 2px;
+        }
+
+        .year-keyword {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .year-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 580px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+
+        /* 新增：关系阐述 */
+        .relationship-intro {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 20px 25px;
+            border-left: 4px solid #D32F2F;
+        }
+
+        .relationship-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #D32F2F;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .relationship-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* 案例卡片 */
+        .case-card {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.9) 0%, rgba(42, 42, 62, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 0 20px 25px;
+            padding: 20px;
+            border: 1px solid rgba(211, 47, 47, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .case-card:hover {
+            border-color: rgba(211, 47, 47, 0.5);
+            box-shadow: 0 15px 40px rgba(211, 47, 47, 0.2);
+        }
+
+        .case-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .case-title-icon {
+            color: #D32F2F;
+        }
+
+        .case-media {
+            display: inline-block;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(211, 47, 47, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .case-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* 数据统计 */
+        .case-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(211, 47, 47, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #D32F2F;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 标签区域 */
+        .case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 15px;
+            background: rgba(211, 47, 47, 0.15);
+            color: #EF5350;
+            border: 1px solid rgba(211, 47, 47, 0.3);
+        }
+
+        /* 新增：网友讨论分析区域 */
+        .discussion-section {
+            margin: 0 20px 25px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #D32F2F;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title-icon {
+            font-size: 1.1rem;
+        }
+
+        .chart-container {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(211, 47, 47, 0.2);
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* 军帽词云图样式 */
+        .cap-wordcloud {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: rgba(20, 20, 35, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wordcloud-shape {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #8B0000, #B22222);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+        }
+
+        .word-item {
+            position: absolute;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .word-1 { top: 15%; left: 50%; transform: translateX(-50%); font-size: 1.3rem; color: #FFD700; }
+        .word-2 { top: 35%; left: 25%; font-size: 1.1rem; color: #FF6347; }
+        .word-3 { top: 35%; right: 25%; font-size: 1.1rem; color: #FF6347; }
+        .word-4 { top: 55%; left: 35%; font-size: 1rem; }
+        .word-5 { top: 55%; right: 35%; font-size: 1rem; }
+        .word-6 { top: 75%; left: 45%; font-size: 0.9rem; }
+        .word-7 { top: 75%; right: 45%; font-size: 0.9rem; }
+        .word-8 { top: 85%; left: 50%; transform: translateX(-50%); font-size: 0.85rem; }
+
+        /* 聚类网络图样式 */
+        .cluster-network {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: rgba(20, 20, 35, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .network-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .network-line {
+            position: absolute;
+            height: 2px;
+            background: rgba(211, 47, 47, 0.5);
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+
+        /* 饼图容器 */
+        .pie-chart-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pie-chart {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pie-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);
+            transform-origin: 50% 50%;
+        }
+
+        .pie-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* 折线图容器 */
+        .line-chart-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+        }
+
+        .line-chart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .chart-axis {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .axis-y {
+            left: 40px;
+            top: 0;
+            width: 1px;
+            height: 100%;
+        }
+
+        .axis-x {
+            left: 40px;
+            bottom: 30px;
+            width: calc(100% - 40px);
+            height: 1px;
+        }
+
+        .chart-line {
+            position: absolute;
+            left: 40px;
+            top: 0;
+            width: calc(100% - 40px);
+            height: calc(100% - 30px);
+        }
+
+        .line-path {
+            fill: none;
+            stroke: #D32F2F;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .data-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #D32F2F;
+            transform: translate(-50%, 50%);
+        }
+
+        .axis-label {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+        }
+
+        .x-label { bottom: 10px; }
+        .y-label { left: 10px; }
+
+        /* 四维分析区域 */
+        .analysis-section {
+            margin: 0 20px 25px;
+        }
+
+        /* 维度切换标签 */
+        .dimension-tabs {
+            display: flex;
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .dimension-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dimension-tab {
+            flex: 1;
+            min-width: 110px;
+            padding: 10px 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+        .dimension-tab.active {
+            background: linear-gradient(135deg, #D32F2F, #B71C1C);
+            color: white;
+            box-shadow: 0 3px 10px rgba(211, 47, 47, 0.3);
+        }
+
+        /* 维度内容 */
+        .dimension-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .dimension-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dimension-card {
+            background: rgba(40, 40, 60, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #D32F2F;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .dimension-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .dimension-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .dimension-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .example-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #D32F2F;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .example-desc {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+
+        /* H5模拟展示区域 */
+        .h5-preview-section {
+            margin: 0 20px 25px;
+        }
+
+        .h5-preview-container {
+            width: 100%;
+            min-height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(211, 47, 47, 0.3);
+        }
+
+        .h5-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            text-align: center;
+        }
+
+        .h5-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #D32F2F;
+            margin-bottom: 15px;
+        }
+
+        .h5-subtitle {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .h5-qr-container {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .h5-qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #D32F2F, #1976D2);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .h5-stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .h5-stat {
+            text-align: center;
+        }
+
+        .h5-stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #D32F2F;
+        }
+
+        .h5-stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 军装照互动区域 */
+        .interaction-section {
+            margin: 0 20px 25px;
+        }
+
+        .interaction-container {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.9) 0%, rgba(42, 42, 62, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(211, 47, 47, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .interaction-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #D32F2F;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .interaction-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .interaction-steps {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #D32F2F, #B71C1C);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .avatar-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .avatar-option {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-option.active {
+            border-color: #D32F2F;
+            box-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
+        }
+
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .uniform-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .uniform-option {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .uniform-option:hover {
+            transform: translateY(-3px);
+        }
+
+        .uniform-option.active {
+            border-color: #D32F2F;
+            box-shadow: 0 3px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        .uniform-preview {
+            width: 100%;
+            height: 100px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .uniform-name {
+            padding: 6px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px dashed rgba(211, 47, 47, 0.5);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: #D32F2F;
+            background: rgba(211, 47, 47, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: #D32F2F;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .upload-hint {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #D32F2F, #B71C1C);
+            color: white;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* 结果展示区域 */
+        .result-container {
+            display: none;
+            text-align: center;
+            padding: 20px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin-top: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-title {
+            color: #D32F2F;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .result-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .uniform-result {
+            position: relative;
+            width: 200px;
+            height: 280px;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(211, 47, 47, 0.5);
+        }
+
+        #uniformCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .result-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #D32F2F;
+        }
+
+        .result-stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: inherit;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #1976D2, #0D47A1);
+            color: white;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(25, 118, 210, 0.4);
+        }
+
+        .share-social-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .share-social-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* 时间线导航 */
+        .timeline-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 20, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 12px 15px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            border: 1px solid transparent;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(211, 47, 47, 0.1);
+            border-color: rgba(211, 47, 47, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn.prev {
+            flex-direction: row;
+        }
+
+        .nav-btn.next {
+            flex-direction: row-reverse;
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.disabled:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: transparent;
+            transform: none;
+        }
+
+        .nav-icon {
+            font-size: 1rem;
+            color: #D32F2F;
+        }
+
+        .nav-text {
+            font-weight: 500;
+        }
+
+        .nav-year {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .timeline-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #00BCD4, #0097A7);
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .timeline-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 640px) {
+            #page-container {
+                width: 100%;
+                height: 100%;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <!-- 半透明遮罩层 -->
+        <div class="overlay"></div>
+        
+        <!-- 返回按钮 -->
+        <div class="back-button" id="backButton">
+            <div class="back-icon">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+        </div>
+        
+        <!-- 主内容容器 -->
+        <div class="main-container" id="mainContainer">
+            <!-- 页面标题区域 -->
+            <div class="page-header">
+                <div class="year-badge">2017</div>
+                <h1 class="year-keyword">破冰·试水</h1>
+                <p class="year-subtitle">主流媒体首次通过H5互动实现现象级传播，开启年轻化传播的新纪元</p>
+            </div>
+            
+            <!-- 新增：军装照H5与主流媒体青春化传播关系阐述 -->
+            <div class="relationship-intro">
+                <h3 class="relationship-title">
+                    <i class="fas fa-link"></i>
+                    军装照H5：主流媒体青春化传播的破冰点
+                </h3>
+                <p class="relationship-content">
+                    "军装照"H5是主流媒体向年轻化、互动化转型的关键破冰点。它标志着主流媒体从单向宣传向互动体验的转变，
+                    从严肃叙事向情感共鸣的跨越。通过技术赋能与社交传播，人民日报成功触达了传统媒体难以覆盖的年轻群体，
+                    实现了主流价值观与互联网传播规律的有效结合。这一案例为后续主流媒体入驻抖音、B站等年轻化平台提供了
+                    宝贵经验，开启了主流媒体"破壁出圈"的新纪元。
+                </p>
+            </div>
+            
+            <!-- 案例卡片 -->
+            <div class="case-card">
+                <h2 class="case-title">
+                    <i class="fas fa-flag case-title-icon"></i>
+                    人民日报客户端『军装照』H5
+                </h2>
+                <div class="case-media">人民日报客户端 × 腾讯天天P图</div>
+                <p class="case-description">
+                    2017年建军90周年之际，人民日报客户端联合腾讯天天P图推出《快看呐！这是我的军装照》H5互动产品，
+                    用户上传照片即可生成不同时期的军装照。上线10天浏览量突破10亿，独立访客超2亿，
+                    成为主流媒体首个现象级互动传播案例，开启"互动+社交"传播新模式。
+                </p>
+                
+                <!-- 数据统计 -->
+                <div class="case-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">10亿+</div>
+                        <div class="stat-label">累计浏览量</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2亿+</div>
+                        <div class="stat-label">独立访客</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5000万+</div>
+                        <div class="stat-label">分享次数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">10天</div>
+                        <div class="stat-label">刷屏周期</div>
+                    </div>
+                </div>
+                
+                <!-- 标签 -->
+                <div class="case-tags">
+                    <div class="tag">互动H5</div>
+                    <div class="tag">人脸融合</div>
+                    <div class="tag">社交传播</div>
+                    <div class="tag">情感连接</div>
+                    <div class="tag">现象级刷屏</div>
+                    <div class="tag">两微一端</div>
+                </div>
+            </div>
+            
+            <!-- 新增：网友讨论分析区域 -->
+            <div class="discussion-section">
+                <h2 class="section-title">
+                    <i class="fas fa-comments section-title-icon"></i>
+                    网友讨论分析：军装照H5的社会反响
+                </h2>
+                
+                <!-- 军帽形状的词云图 -->
+                <div class="chart-container">
+                    <div class="chart-title">军装照H5话题词云（军帽形状）</div>
+                    <div class="cap-wordcloud">
+                        <div class="wordcloud-shape">
+                            <div class="word-item word-1">爱国</div>
+                            <div class="word-item word-2">自豪</div>
+                            <div class="word-item word-3">致敬</div>
+                            <div class="word-item word-4">军人</div>
+                            <div class="word-item word-5">荣耀</div>
+                            <div class="word-item word-6">创意</div>
+                            <div class="word-item word-7">传播</div>
+                            <div class="word-item word-8">人民日报</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 聚类网络图 -->
+                <div class="chart-container">
+                    <div class="chart-title">讨论话题聚类网络</div>
+                    <div class="cluster-network" id="clusterNetwork">
+                        <!-- 聚类节点将由JS动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 饼状图 -->
+                <div class="chart-container">
+                    <div class="chart-title">网友情感倾向分布</div>
+                    <div class="pie-chart-container">
+                        <div class="pie-chart" id="pieChart">
+                            <!-- 饼图将由JS动态生成 -->
+                        </div>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #4CAF50;"></div>
+                                <span>积极正面 (68%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FF9800;"></div>
+                                <span>中性评价 (25%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #F44336;"></div>
+                                <span>批评建议 (7%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 折线图 -->
+                <div class="chart-container">
+                    <div class="chart-title">H5传播热度变化趋势</div>
+                    <div class="line-chart-container">
+                        <div class="line-chart">
+                            <div class="chart-axis axis-y"></div>
+                            <div class="chart-axis axis-x"></div>
+                            <div class="chart-line">
+                                <svg width="100%" height="100%" viewBox="0 0 400 150" preserveAspectRatio="none">
+                                    <path class="line-path" d="M0,120 L50,100 L100,60 L150,30 L200,20 L250,40 L300,80 L350,110 L400,130" />
+                                </svg>
+                                <!-- 数据点 -->
+                                <div class="data-point" style="left: 0%; top: 20%;"></div>
+                                <div class="data-point" style="left: 12.5%; top: 33%;"></div>
+                                <div class="data-point" style="left: 25%; top: 60%;"></div>
+                                <div class="data-point" style="left: 37.5%; top: 80%;"></div>
+                                <div class="data-point" style="left: 50%; top: 87%;"></div>
+                                <div class="data-point" style="left: 62.5%; top: 73%;"></div>
+                                <div class="data-point" style="left: 75%; top: 47%;"></div>
+                                <div class="data-point" style="left: 87.5%; top: 27%;"></div>
+                                <div class="data-point" style="left: 100%; top: 13%;"></div>
+                            </div>
+                            <!-- X轴标签 -->
+                            <div class="axis-label x-label" style="left: 10%;">7/27</div>
+                            <div class="axis-label x-label" style="left: 30%;">7/29</div>
+                            <div class="axis-label x-label" style="left: 50%;">7/31</div>
+                            <div class="axis-label x-label" style="left: 70%;">8/2</div>
+                            <div class="axis-label x-label" style="left: 90%;">8/4</div>
+                            <!-- Y轴标签 -->
+                            <div class="axis-label y-label" style="top: 20%;">100万</div>
+                            <div class="axis-label y-label" style="top: 50%;">500万</div>
+                            <div class="axis-label y-label" style="top: 80%;">1000万</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 四维分析区域 -->
+            <div class="analysis-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-pie section-title-icon"></i>
+                    四维分析：破冰如何实现
+                </h2>
+                
+                <!-- 维度切换标签 -->
+                <div class="dimension-tabs" id="dimensionTabs">
+                    <div class="dimension-tab active" data-dimension="narrative">
+                        <i class="fas fa-book-open"></i> 叙事策略
+                    </div>
+                    <div class="dimension-tab" data-dimension="expression">
+                        <i class="fas fa-paint-brush"></i> 表达形式
+                    </div>
+                    <div class="dimension-tab" data-dimension="technology">
+                        <i class="fas fa-microchip"></i> 技术应用
+                    </div>
+                    <div class="dimension-tab" data-dimension="platform">
+                        <i class="fas fa-sitemap"></i> 平台生态
+                    </div>
+                </div>
+                
+                <!-- 叙事策略维度 -->
+                <div class="dimension-content active" id="narrativeContent">
+                    <div class="dimension-card">
+                        <h3 class="dimension-title">个人身份与宏大主题的情感连接</h3>
+                        <p class="dimension-description">
+                            建军90周年是典型的宏大政治主题，传统报道往往采用历史回顾、成就展示等严肃叙事。
+                            军装照H5创造性地将宏大主题转化为个人情感体验，让用户通过生成自己的军装照，
+                            实现"我"与"国家"、"个人记忆"与"集体历史"的深度连接，激发情感共鸣。
+                        </p>
+                        
+                        <div class="dimension-examples">
+                            <div class="example-item">
+                                <div class="example-title">身份代入</div>
+                                <div class="example-desc">用户从旁观者变为参与者，主动生成并分享自己的"军装照"</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">情感激活</div>
+                                <div class="example-desc">激发爱国情怀、荣誉感、集体归属感等正面情感</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">记忆重构</div>
+                                <div class="example-desc">将军队历史转化为可体验的个人"记忆"，降低理解门槛</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 表达形式维度 -->
+                <div class="dimension-content" id="expressionContent">
+                    <div class="dimension-card">
+                        <h3 class="dimension-title">互动体验与视觉化呈现</h3>
+                        <p class="dimension-description">
+                            打破传统媒体的单向传播模式，采用H5互动形式，让用户从被动接收信息转变为主动参与内容生产。
+                            视觉上提供多种军装模板选择，满足不同审美需求，结果可保存、可分享，形成社交货币。
+                        </p>
+                        
+                        <div class="dimension-examples">
+                            <div class="example-item">
+                                <div class="example-title">多模板选择</div>
+                                <div class="example-desc">提供从红军时期到现代军队的8套军装模板</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">视觉优化</div>
+                                <div class="example-desc">人脸自动对齐、肤色调整、光影优化等视觉处理</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">社交分享设计</div>
+                                <div class="example-desc">生成图片专为朋友圈分享优化，添加品牌标识和水印</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 技术应用维度 -->
+                <div class="dimension-content" id="technologyContent">
+                    <div class="dimension-card">
+                        <h3 class="dimension-title">人脸融合技术与轻量化交互</h3>
+                        <p class="dimension-description">
+                            基于腾讯天天P图的人脸融合技术，实现照片与军装模板的自然合成。
+                            技术隐藏在友好的用户交互背后，用户只需上传照片、选择模板两步操作，
+                            即可获得高质量的合成效果，技术门槛几乎为零。
+                        </p>
+                        
+                        <div class="dimension-examples">
+                            <div class="example-item">
+                                <div class="example-title">人脸识别定位</div>
+                                <div class="example-desc">自动识别面部特征点，精准对齐军装模板</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">智能融合算法</div>
+                                <div class="example-desc">肤色、光影、角度自动匹配，实现自然融合效果</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">前端轻量化</div>
+                                <div class="example-desc">H5页面无需下载APP，微信内直接打开使用</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 平台生态维度 -->
+                <div class="dimension-content" id="platformContent">
+                    <div class="dimension-card">
+                        <h3 class="dimension-title">微信社交裂变与全媒体联动</h3>
+                        <p class="dimension-description">
+                            产品完全基于微信生态设计，利用朋友圈、群聊等社交关系链实现病毒式传播。
+                            人民日报客户端首发后，微博、网站、纸媒等全媒体平台跟进报道，
+                            形成"社交传播引爆→主流媒体放大→再次社交传播"的循环效应。
+                        </p>
+                        
+                        <div class="dimension-examples">
+                            <div class="example-item">
+                                <div class="example-title">微信生态适配</div>
+                                <div class="example-desc">专为微信内分享优化，加载速度快，交互流畅</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">社交裂变机制</div>
+                                <div class="example-desc">用户生成照片后自然分享，形成指数级传播</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-title">跨平台联动</div>
+                                <div class="example-desc">客户端首发，微博话题跟进，报纸深度解读</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- H5模拟展示区域 -->
+            <div class="h5-preview-section">
+                <h2 class="section-title">
+                    <i class="fas fa-mobile-alt section-title-icon"></i>
+                    原版H5界面还原
+                </h2>
+                
+                <div class="h5-preview-container">
+                    <div class="h5-screen">
+                        <div class="h5-title">快看呐！这是我的军装照</div>
+                        <div class="h5-subtitle">
+                            庆祝中国人民解放军建军90周年<br>
+                            上传照片，生成你的专属军装照
+                        </div>
+                        
+                        <div class="h5-qr-container">
+                            <div class="h5-qr-placeholder">
+                                <i class="fas fa-qrcode" style="font-size: 2.5rem; margin-bottom: 8px;"></i>
+                                扫描体验原版H5
+                            </div>
+                        </div>
+                        
+                        <div style="color: rgba(255, 255, 255, 0.7); margin: 15px 0; font-size: 0.8rem;">
+                            (原版H5已下线，此界面为历史还原)
+                        </div>
+                        
+                        <div class="h5-stats">
+                            <div class="h5-stat">
+                                <div class="h5-stat-value">10亿</div>
+                                <div class="h5-stat-label">浏览量</div>
+                            </div>
+                            <div class="h5-stat">
+                                <div class="h5-stat-value">2亿</div>
+                                <div class="h5-stat-label">参与人数</div>
+                            </div>
+                            <div class="h5-stat">
+                                <div class="h5-stat-value">8款</div>
+                                <div class="h5-stat-label">军装模板</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 军装照互动区域 -->
+            <div class="interaction-section">
+                <div class="interaction-container">
+                    <h2 class="interaction-title">
+                        <i class="fas fa-camera-retro"></i>
+                        生成你的军装照
+                    </h2>
+                    <p class="interaction-subtitle">
+                        体验2017年现象级H5的核心互动，选择头像和军装模板，生成你的专属军装照，
+                        重温"军装照"刷屏朋友圈的盛况。
+                    </p>
+                    
+                    <div class="interaction-steps">
+                        <!-- 步骤1：选择头像 -->
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <div class="step-title">选择头像</div>
+                            </div>
+                            <div class="step-content">
+                                <div class="avatar-options" id="avatarOptions">
+                                    <!-- 头像选项将由JS动态生成 -->
+                                </div>
+                                
+                                <div class="file-upload" id="fileUpload">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">上传自己的照片</div>
+                                    <div class="upload-hint">支持JPG、PNG格式，建议使用正面免冠照</div>
+                                    <input type="file" id="fileInput" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 步骤2：选择军装 -->
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <div class="step-title">选择军装模板</div>
+                            </div>
+                            <div class="step-content">
+                                <div class="uniform-options" id="uniformOptions">
+                                    <!-- 军装选项将由JS动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn generate-btn" id="generateBtn">
+                            <i class="fas fa-camera"></i> 生成军装照
+                        </button>
+                        <button class="action-btn reset-btn" id="resetBtn">
+                            <i class="fas fa-redo"></i> 重新选择
+                        </button>
+                    </div>
+                    
+                    <!-- 结果展示 -->
+                    <div class="result-container" id="resultContainer">
+                        <h3 class="result-title">你的军装照已生成！</h3>
+                        <p class="result-subtitle">
+                            向中国人民解放军致敬！<br>
+                            这张照片曾刷爆朋友圈，现在你可以保存或分享给朋友。
+                        </p>
+                        
+                        <div class="uniform-result">
+                            <canvas id="uniformCanvas"></canvas>
+                        </div>
+                        
+                        <div class="result-stats">
+                            <div class="result-stat">
+                                <div class="result-stat-value" id="userCount">2亿+</div>
+                                <div class="result-stat-label">总参与人数</div>
+                            </div>
+                            <div class="result-stat">
+                                <div class="result-stat-value" id="shareCount">5000万+</div>
+                                <div class="result-stat-label">总分享次数</div>
+                            </div>
+                            <div class="result-stat">
+                                <div class="result-stat-value" id="viewCount">10亿+</div>
+                                <div class="result-stat-label">总浏览量</div>
+                            </div>
+                        </div>
+                        
+                        <div class="share-buttons">
+                            <button class="share-btn save-btn" id="saveBtn">
+                                <i class="fas fa-download"></i> 保存图片
+                            </button>
+                            <button class="share-btn share-social-btn" id="shareBtn">
+                                <i class="fas fa-share-alt"></i> 分享给朋友
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 时间线导航 -->
+        <div class="timeline-nav">
+            <div class="nav-buttons">
+                <div class="nav-btn disabled prev">
+                    <i class="fas fa-chevron-left nav-icon"></i>
+                    <div class="nav-text">
+                        <div>2016：前传</div>
+                        <div class="nav-year">年轻化传播探索初期</div>
+                    </div>
+                </div>
+                
+                <button class="timeline-btn" id="timelineBtn">
+                    <i class="fas fa-stream"></i> 返回时间轴
+                </button>
+                
+                <a href="#" class="nav-btn next">
+                    <div class="nav-text">
+                        <div>2018：入圈·扎根</div>
+                        <div class="nav-year">央视新闻入驻抖音B站</div>
+                    </div>
+                    <i class="fas fa-chevron-right nav-icon"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const backButton = document.getElementById('backButton');
+            const mainContainer = document.getElementById('mainContainer');
+            const dimensionTabs = document.getElementById('dimensionTabs');
+            const dimensionContents = document.querySelectorAll('.dimension-content');
+            const avatarOptions = document.getElementById('avatarOptions');
+            const uniformOptions = document.getElementById('uniformOptions');
+            const fileUpload = document.getElementById('fileUpload');
+            const fileInput = document.getElementById('fileInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const uniformCanvas = document.getElementById('uniformCanvas');
+            const saveBtn = document.getElementById('saveBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const timelineBtn = document.getElementById('timelineBtn');
+            const clusterNetwork = document.getElementById('clusterNetwork');
+            const pieChart = document.getElementById('pieChart');
+            
+            // 交互状态
+            let selectedAvatar = 0; // 默认选择第一个头像
+            let selectedUniform = 0; // 默认选择第一个军装
+            let uploadedImage = null;
+            let canvasCtx = null;
+            
+            // 头像数据
+            const avatarData = [
+                { id: 1, name: "青年男性", color: "#4CAF50" },
+                { id: 2, name: "青年女性", color: "#E91E63" },
+                { id: 3, name: "中年男性", color: "#2196F3" },
+                { id: 4, name: "中年女性", color: "#9C27B0" },
+                { id: 5, name: "大学生", color: "#FF9800" },
+                { id: 6, name: "军人形象", color: "#D32F2F" }
+            ];
+            
+            // 军装数据
+            const uniformData = [
+                { 
+                    id: 1, 
+                    name: "红军时期", 
+                    period: "1927-1937",
+                    color: "#B71C1C",
+                    style: "八角帽、红五星、粗布军装"
+                },
+                { 
+                    id: 2, 
+                    name: "八路军时期", 
+                    period: "1937-1945",
+                    color: "#8D6E63",
+                    style: "灰色军装、八路军臂章"
+                },
+                { 
+                    id: 3, 
+                    name: "解放战争时期", 
+                    period: "1945-1949",
+                    color: "#5D4037",
+                    style: "土黄色军装、解放帽"
+                },
+                { 
+                    id: 4, 
+                    name: "志愿军时期", 
+                    period: "1950-1953",
+                    color: "#795548",
+                    style: "棉军装、雷锋帽"
+                },
+                { 
+                    id: 5, 
+                    name: "65式军装", 
+                    period: "1965-1985",
+                    color: "#D32F2F",
+                    style: "一颗红星两面红旗"
+                },
+                { 
+                    id: 6, 
+                    name: "87式军装", 
+                    period: "1987-2007",
+                    color: "#1976D2",
+                    style: "恢复军衔制、大檐帽"
+                },
+                { 
+                    id: 7, 
+                    name: "07式军装", 
+                    period: "2007至今",
+                    color: "#303F9F",
+                    style: "国际接轨、系列化"
+                },
+                { 
+                    id: 8, 
+                    name: "新时代军装", 
+                    period: "2015至今",
+                    color: "#1A237E",
+                    style: "星空迷彩、数字化"
+                }
+            ];
+            
+            // 聚类网络数据
+            const clusterData = [
+                { id: 1, name: "爱国情怀", x: 50, y: 50, color: "#D32F2F", connections: [2, 3, 4] },
+                { id: 2, name: "军人荣耀", x: 30, y: 80, color: "#1976D2", connections: [1, 5] },
+                { id: 3, name: "技术创新", x: 70, y: 80, color: "#388E3C", connections: [1, 6] },
+                { id: 4, name: "传播效果", x: 20, y: 30, color: "#7B1FA2", connections: [1, 6] },
+                { id: 5, name: "历史记忆", x: 80, y: 30, color: "#F57C00", connections: [2] },
+                { id: 6, name: "社交互动", x: 50, y: 90, color: "#0288D1", connections: [3, 4] }
+            ];
+            
+            // 初始化Canvas
+            function initCanvas() {
+                canvasCtx = uniformCanvas.getContext('2d');
+                uniformCanvas.width = 200;
+                uniformCanvas.height = 280;
+                
+                // 绘制初始背景
+                drawInitialCanvas();
+            }
+            
+            // 绘制初始Canvas
+            function drawInitialCanvas() {
+                if (!canvasCtx) return;
+                
+                // 清空画布
+                canvasCtx.clearRect(0, 0, uniformCanvas.width, uniformCanvas.height);
+                
+                // 绘制渐变背景
+                const gradient = canvasCtx.createLinearGradient(0, 0, uniformCanvas.width, uniformCanvas.height);
+                gradient.addColorStop(0, '#0a0a1a');
+                gradient.addColorStop(1, '#1a1a2e');
+                canvasCtx.fillStyle = gradient;
+                canvasCtx.fillRect(0, 0, uniformCanvas.width, uniformCanvas.height);
+                
+                // 绘制提示文字
+                canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                canvasCtx.font = '16px "AlibabaPuHuiTi", sans-serif';
+                canvasCtx.textAlign = 'center';
+                canvasCtx.fillText('点击生成你的军装照', uniformCanvas.width/2, uniformCanvas.height/2);
+                
+                canvasCtx.font = '12px "AlibabaPuHuiTi", sans-serif';
+                canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                canvasCtx.fillText('纪念中国人民解放军建军90周年', uniformCanvas.width/2, uniformCanvas.height/2 + 25);
+            }
+            
+            // 生成头像选项
+            function generateAvatarOptions() {
+                avatarOptions.innerHTML = '';
+                
+                avatarData.forEach((avatar, index) => {
+                    const avatarElement = document.createElement('div');
+                    avatarElement.className = `avatar-option ${index === selectedAvatar ? 'active' : ''}`;
+                    avatarElement.dataset.index = index;
+                    
+                    // 创建Canvas绘制头像
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 80;
+                    canvas.height = 80;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 绘制头像
+                    drawAvatar(ctx, avatar, index);
+                    
+                    avatarElement.appendChild(canvas);
+                    avatarOptions.appendChild(avatarElement);
+                    
+                    // 添加点击事件
+                    avatarElement.addEventListener('click', function() {
+                        // 移除所有active类
+                        document.querySelectorAll('.avatar-option').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        
+                        // 添加当前active类
+                        this.classList.add('active');
+                        selectedAvatar = parseInt(this.dataset.index);
+                        
+                        // 清除上传的图片
+                        uploadedImage = null;
+                    });
+                });
+            }
+            
+            // 绘制头像
+            function drawAvatar(ctx, avatar, index) {
+                // 绘制背景
+                const gradient = ctx.createLinearGradient(0, 0, 80, 80);
+                gradient.addColorStop(0, avatar.color);
+                gradient.addColorStop(1, darkenColor(avatar.color, 30));
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(40, 40, 38, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 绘制头像轮廓
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(40, 40, 30, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 绘制面部特征（简化版）
+                ctx.fillStyle = '#795548'; // 皮肤色
+                ctx.beginPath();
+                ctx.arc(40, 40, 25, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 根据性别绘制不同特征
+                if (avatar.name.includes('女性')) {
+                    // 女性：长发
+                    ctx.fillStyle = '#5D4037';
+                    ctx.beginPath();
+                    ctx.ellipse(40, 55, 28, 20, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 女性面部特征
+                    ctx.fillStyle = '#FFCDD2'; // 腮红
+                    ctx.beginPath();
+                    ctx.arc(30, 40, 5, 0, Math.PI * 2);
+                    ctx.arc(50, 40, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // 绘制眼睛
+                ctx.fillStyle = '#1A237E';
+                ctx.beginPath();
+                ctx.arc(32, 35, 3, 0, Math.PI * 2);
+                ctx.arc(48, 35, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 绘制嘴巴
+                ctx.strokeStyle = '#D32F2F';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(40, 48, 6, 0.2, Math.PI - 0.2);
+                ctx.stroke();
+                
+                // 如果是军人形象，添加军帽
+                if (avatar.name.includes('军人')) {
+                    ctx.fillStyle = '#D32F2F';
+                    ctx.beginPath();
+                    ctx.ellipse(40, 20, 25, 10, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 红星
+                    drawStar(ctx, 40, 20, 5, 5, '#FFD700');
+                }
+            }
+            
+            // 生成军装选项
+            function generateUniformOptions() {
+                uniformOptions.innerHTML = '';
+                
+                uniformData.forEach((uniform, index) => {
+                    const uniformElement = document.createElement('div');
+                    uniformElement.className = `uniform-option ${index === selectedUniform ? 'active' : ''}`;
+                    uniformElement.dataset.index = index;
+                    
+                    uniformElement.innerHTML = `
+                        <div class="uniform-preview" style="background: linear-gradient(135deg, ${uniform.color}, ${darkenColor(uniform.color, 30)})">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                                ${uniform.name}<br>
+                                <span style="font-size: 0.7rem; font-weight: normal;">${uniform.period}</span>
+                            </div>
+                        </div>
+                        <div class="uniform-name">${uniform.name}</div>
+                    `;
+                    
+                    uniformOptions.appendChild(uniformElement);
+                    
+                    // 添加点击事件
+                    uniformElement.addEventListener('click', function() {
+                        // 移除所有active类
+                        document.querySelectorAll('.uniform-option').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        
+                        // 添加当前active类
+                        this.classList.add('active');
+                        selectedUniform = parseInt(this.dataset.index);
+                    });
+                });
+            }
+            
+            // 生成聚类网络图
+            function generateClusterNetwork() {
+                clusterNetwork.innerHTML = '';
+                
+                // 先绘制连接线
+                clusterData.forEach(node => {
+                    node.connections.forEach(connId => {
+                        const targetNode = clusterData.find(n => n.id === connId);
+                        if (targetNode) {
+                            const line = document.createElement('div');
+                            line.className = 'network-line';
+                            
+                            // 计算线的位置和角度
+                            const x1 = node.x * 0.01 * clusterNetwork.offsetWidth;
+                            const y1 = node.y * 0.01 * clusterNetwork.offsetHeight;
+                            const x2 = targetNode.x * 0.01 * clusterNetwork.offsetWidth;
+                            const y2 = targetNode.y * 0.01 * clusterNetwork.offsetHeight;
+                            
+                            const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                            
+                            line.style.width = `${length}px`;
+                            line.style.left = `${x1}px`;
+                            line.style.top = `${y1}px`;
+                            line.style.transform = `rotate(${angle}deg)`;
+                            
+                            clusterNetwork.appendChild(line);
+                        }
+                    });
+                });
+                
+                // 绘制节点
+                clusterData.forEach(node => {
+                    const nodeElement = document.createElement('div');
+                    nodeElement.className = 'network-node';
+                    nodeElement.style.left = `calc(${node.x}% - 20px)`;
+                    nodeElement.style.top = `calc(${node.y}% - 20px)`;
+                    nodeElement.style.backgroundColor = node.color;
+                    nodeElement.innerHTML = node.name;
+                    
+                    clusterNetwork.appendChild(nodeElement);
+                });
+            }
+            
+            // 生成饼状图
+            function generatePieChart() {
+                pieChart.innerHTML = '';
+                
+                const data = [
+                    { percentage: 68, color: '#4CAF50', label: '积极正面' },
+                    { percentage: 25, color: '#FF9800', label: '中性评价' },
+                    { percentage: 7, color: '#F44336', label: '批评建议' }
+                ];
+                
+                let cumulativePercentage = 0;
+                
+                data.forEach((item, index) => {
+                    const segment = document.createElement('div');
+                    segment.className = 'pie-segment';
+                    segment.style.backgroundColor = item.color;
+                    segment.style.transform = `rotate(${cumulativePercentage * 3.6}deg)`;
+                    
+                    // 计算扇形的clip-path
+                    const startAngle = cumulativePercentage * 3.6;
+                    const endAngle = (cumulativePercentage + item.percentage) * 3.6;
+                    
+                    // 创建扇形路径
+                    if (item.percentage < 50) {
+                        // 小扇形使用不同的clip-path
+                        segment.style.clipPath = `polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)`;
+                    }
+                    
+                    pieChart.appendChild(segment);
+                    cumulativePercentage += item.percentage;
+                });
+                
+                // 添加中心白色圆形
+                const centerCircle = document.createElement('div');
+                centerCircle.style.position = 'absolute';
+                centerCircle.style.width = '50px';
+                centerCircle.style.height = '50px';
+                centerCircle.style.borderRadius = '50%';
+                centerCircle.style.backgroundColor = 'white';
+                centerCircle.style.top = '50%';
+                centerCircle.style.left = '50%';
+                centerCircle.style.transform = 'translate(-50%, -50%)';
+                pieChart.appendChild(centerCircle);
+            }
+            
+            // 颜色变暗函数
+            function darkenColor(color, percent) {
+                const num = parseInt(color.replace("#", ""), 16);
+                const amt = Math.round(2.55 * percent);
+                const R = (num >> 16) - amt;
+                const G = (num >> 8 & 0x00FF) - amt;
+                const B = (num & 0x0000FF) - amt;
+                
+                return "#" + (
+                    0x1000000 +
+                    (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+                    (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+                    (B < 255 ? (B < 1 ? 0 : B) : 255)
+                ).toString(16).slice(1);
+            }
+            
+            // 绘制五角星
+            function drawStar(ctx, cx, cy, spikes, outerRadius, color) {
+                let rot = Math.PI / 2 * 3;
+                let x = cx;
+                let y = cy;
+                const step = Math.PI / spikes;
+                const innerRadius = outerRadius * 0.5;
+                
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - outerRadius);
+                
+                for (let i = 0; i < spikes; i++) {
+                    x = cx + Math.cos(rot) * outerRadius;
+                    y = cy + Math.sin(rot) * outerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+                    
+                    x = cx + Math.cos(rot) * innerRadius;
+                    y = cy + Math.sin(rot) * innerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+                }
+                
+                ctx.lineTo(cx, cy - outerRadius);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+            
+            // 绘制军装照
+            function drawUniformPhoto() {
+                if (!canvasCtx) return;
+                
+                const uniform = uniformData[selectedUniform];
+                const avatar = avatarData[selectedAvatar];
+                
+                // 清空画布
+                canvasCtx.clearRect(0, 0, uniformCanvas.width, uniformCanvas.height);
+                
+                // 绘制渐变背景
+                const gradient = canvasCtx.createLinearGradient(0, 0, uniformCanvas.width, uniformCanvas.height);
+                gradient.addColorStop(0, uniform.color);
+                gradient.addColorStop(1, darkenColor(uniform.color, 40));
+                canvasCtx.fillStyle = gradient;
+                canvasCtx.fillRect(0, 0, uniformCanvas.width, uniformCanvas.height);
+                
+                // 绘制头像（如果有上传的图片则使用上传的图片）
+                if (uploadedImage) {
+                    // 使用上传的图片
+                    const imgSize = Math.min(uniformCanvas.width * 0.7, uniformCanvas.height * 0.6);
+                    const imgX = (uniformCanvas.width - imgSize) / 2;
+                    const imgY = (uniformCanvas.height - imgSize) / 2 - 15;
+                    
+                    // 绘制圆形头像
+                    canvasCtx.save();
+                    canvasCtx.beginPath();
+                    canvasCtx.arc(imgX + imgSize/2, imgY + imgSize/2, imgSize/2, 0, Math.PI * 2);
+                    canvasCtx.clip();
+                    
+                    canvasCtx.drawImage(uploadedImage, imgX, imgY, imgSize, imgSize);
+                    canvasCtx.restore();
+                } else {
+                    // 使用默认头像
+                    const avatarSize = Math.min(uniformCanvas.width * 0.6, uniformCanvas.height * 0.5);
+                    const avatarX = (uniformCanvas.width - avatarSize) / 2;
+                    const avatarY = (uniformCanvas.height - avatarSize) / 2 - 10;
+                    
+                    // 创建临时Canvas绘制头像
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = avatarSize;
+                    tempCanvas.height = avatarSize;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    
+                    // 绘制头像
+                    drawAvatar(tempCtx, avatar, selectedAvatar);
+                    
+                    // 将头像绘制到主Canvas
+                    canvasCtx.drawImage(tempCanvas, avatarX, avatarY, avatarSize, avatarSize);
+                }
+                
+                // 绘制军帽
+                const capWidth = uniformCanvas.width * 0.8;
+                const capHeight = uniformCanvas.height * 0.12;
+                const capX = (uniformCanvas.width - capWidth) / 2;
+                const capY = uniformCanvas.height * 0.15;
+                
+                canvasCtx.fillStyle = darkenColor(uniform.color, 20);
+                canvasCtx.beginPath();
+                canvasCtx.ellipse(capX + capWidth/2, capY + capHeight/2, capWidth/2, capHeight/2, 0, 0, Math.PI * 2);
+                canvasCtx.fill();
+                
+                // 绘制帽徽（红星）
+                drawStar(canvasCtx, capX + capWidth/2, capY + capHeight/2, 5, 8, '#FFD700');
+                
+                // 绘制肩章（根据时期不同）
+                const epauletSize = 20;
+                const epauletY = uniformCanvas.height * 0.45;
+                
+                // 左肩章
+                canvasCtx.fillStyle = uniform.color;
+                canvasCtx.fillRect(capX + 15, epauletY, epauletSize, epauletSize/2);
+                
+                // 右肩章
+                canvasCtx.fillRect(capX + capWidth - 15 - epauletSize, epauletY, epauletSize, epauletSize/2);
+                
+                // 绘制文字
+                canvasCtx.fillStyle = '#FFFFFF';
+                canvasCtx.font = 'bold 18px "AlibabaPuHuiTi", sans-serif';
+                canvasCtx.textAlign = 'center';
+                canvasCtx.fillText(uniform.name, uniformCanvas.width/2, uniformCanvas.height * 0.75);
+                
+                canvasCtx.font = '14px "AlibabaPuHuiTi", sans-serif';
+                canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                canvasCtx.fillText(uniform.period, uniformCanvas.width/2, uniformCanvas.height * 0.75 + 25);
+                canvasCtx.fillText(uniform.style, uniformCanvas.width/2, uniformCanvas.height * 0.75 + 45);
+                
+                // 绘制水印
+                canvasCtx.font = '10px "AlibabaPuHuiTi", sans-serif';
+                canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                canvasCtx.fillText('人民日报客户端 × 腾讯天天P图', uniformCanvas.width/2, uniformCanvas.height - 15);
+                canvasCtx.fillText('纪念中国人民解放军建军90周年', uniformCanvas.width/2, uniformCanvas.height - 30);
+            }
+            
+            // 返回按钮点击事件
+            backButton.addEventListener('click', function() {
+                // 实际项目中这里返回时间轴页面
+                alert('返回时间轴页面（实际项目中会跳转）');
+                // window.history.back();
+            });
+            
+            // 维度标签切换
+            dimensionTabs.addEventListener('click', function(e) {
+                const tab = e.target.closest('.dimension-tab');
+                if (!tab) return;
+                
+                // 移除所有标签的active类
+                dimensionTabs.querySelectorAll('.dimension-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加当前标签的active类
+                tab.classList.add('active');
+                
+                // 获取维度ID
+                const dimensionId = tab.dataset.dimension;
+                
+                // 隐藏所有内容
+                dimensionContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 显示对应内容
+                const contentId = `${dimensionId}Content`;
+                document.getElementById(contentId).classList.add('active');
+                
+                // 添加滚动动画
+                const section = document.querySelector('.analysis-section');
+                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+            
+            // 文件上传处理
+            fileUpload.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                // 检查文件类型
+                if (!file.type.match('image.*')) {
+                    alert('请选择图片文件（JPG、PNG格式）');
+                    return;
+                }
+                
+                // 检查文件大小（限制5MB）
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('图片大小不能超过5MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        uploadedImage = img;
+                        
+                        // 移除所有头像的active类
+                        document.querySelectorAll('.avatar-option').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        
+                        // 提示用户已上传
+                        fileUpload.innerHTML = `
+                            <div class="upload-icon">
+                                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                            </div>
+                            <div class="upload-text">照片上传成功！</div>
+                            <div class="upload-hint">点击生成按钮创建军装照</div>
+                        `;
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // 生成军装照
+            generateBtn.addEventListener('click', function() {
+                // 绘制军装照
+                drawUniformPhoto();
+                
+                // 显示结果区域
+                resultContainer.style.display = 'block';
+                
+                // 滚动到结果区域
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+            
+            // 重置选择
+            resetBtn.addEventListener('click', function() {
+                // 重置选择
+                selectedAvatar = 0;
+                selectedUniform = 0;
+                uploadedImage = null;
+                
+                // 更新UI
+                generateAvatarOptions();
+                generateUniformOptions();
+                
+                // 重置上传区域
+                fileUpload.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">上传自己的照片</div>
+                    <div class="upload-hint">支持JPG、PNG格式，建议使用正面免冠照</div>
+                `;
+                
+                // 隐藏结果区域
+                resultContainer.style.display = 'none';
+                
+                // 重置Canvas
+                drawInitialCanvas();
+            });
+            
+            // 保存图片
+            saveBtn.addEventListener('click', function() {
+                if (!canvasCtx) return;
+                
+                // 创建临时Canvas添加水印
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = uniformCanvas.width;
+                tempCanvas.height = uniformCanvas.height;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                // 绘制原始内容
+                tempCtx.drawImage(uniformCanvas, 0, 0);
+                
+                // 添加额外水印
+                tempCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                tempCtx.fillRect(0, tempCanvas.height - 50, tempCanvas.width, 50);
+                
+                tempCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                tempCtx.font = '10px "AlibabaPuHuiTi", sans-serif';
+                tempCtx.textAlign = 'center';
+                tempCtx.fillText('《破壁·共生》2017军装照H5复刻版', tempCanvas.width/2, tempCanvas.height - 30);
+                tempCtx.fillText('数据来源：人民日报客户端官方数据', tempCanvas.width/2, tempCanvas.height - 10);
+                
+                // 创建下载链接
+                const dataURL = tempCanvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `军装照-${new Date().getTime()}.png`;
+                link.href = dataURL;
+                link.click();
+                
+                // 显示提示
+                alert('军装照已保存！');
+            });
+            
+            // 分享
+            shareBtn.addEventListener('click', function() {
+                // 模拟分享功能
+                const uniform = uniformData[selectedUniform];
+                const shareText = `我在《破壁·共生》H5中生成了一张${uniform.name}军装照，向中国人民解放军致敬！\n一起重温2017年刷屏朋友圈的"军装照"H5吧！`;
+                
+                // 检查是否支持Web Share API
+                if (navigator.share) {
+                    navigator.share({
+                        title: '我的军装照',
+                        text: shareText,
+                        url: window.location.href
+                    });
+                } else {
+                    // 复制到剪贴板
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        alert('分享文案已复制到剪贴板！\n\n' + shareText);
+                    });
+                }
+            });
+            
+            // 返回时间轴
+            timelineBtn.addEventListener('click', function() {
+                // 实际项目中这里返回时间轴页面
+                alert('返回时间轴页面（实际项目中会跳转）');
+                // window.location.href = 'timeline.html';
+            });
+            
+            // 页面滚动效果
+            let lastScrollTop = 0;
+            mainContainer.addEventListener('scroll', function() {
+                const scrollTop = mainContainer.scrollTop;
+                
+                // 根据滚动方向调整返回按钮透明度
+                const opacity = Math.min(0.9, 0.7 + (scrollTop / 200));
+                backButton.style.opacity = opacity;
+                
+                lastScrollTop = scrollTop;
+            });
+            
+            // 初始化
+            initCanvas();
+            generateAvatarOptions();
+            generateUniformOptions();
+            generateClusterNetwork();
+            generatePieChart();
+        });
+    </script>
+</body>
+</html>
