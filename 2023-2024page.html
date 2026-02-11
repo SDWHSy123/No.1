@@ -1604,7 +1604,11 @@
                 setTimeout(() => { wordElement.style.transform = 'scale(1) rotate(0deg)'; }, 300);
             }
             
-            backButton.addEventListener('click', function() { showNotification('返回时间轴页面'); });
+                        // 返回按钮点击事件
+            backButton.addEventListener('click', function() {
+                // 跳转到指定页面
+                window.location.href = "https://sdwhsy123.github.io/No.1/indexpage.html";
+            });
             
             let lastScrollTop = 0;
             mainContainer.addEventListener('scroll', function() { const scrollTop = mainContainer.scrollTop; backButton.style.opacity = Math.min(0.9, 0.7 + (scrollTop / 200)); lastScrollTop = scrollTop; });
