@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 手机竖屏画幅: 640x1008，在大屏幕居中 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>进化·时间轴 - 主流媒体的青春进化论</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=AlibabaPuHuiTi:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局：使手机画幅在大屏幕完美居中，背景深色衬托 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'AlibabaPuHuiTi', -apple-system, sans-serif;
+            background: #0b1c2c;  /* 深蓝底色，衬托画幅 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;  /* 整体禁止滚动，滚动在画幅内部 */
+        }
+
+        /* 手机画幅容器：固定640x1008，背景图为“时间轴.png”，并带遮罩层 */
+        #page-container {
+            width: 640px;
+            height: 1008px;
+            position: relative;
+            overflow: hidden;    /* 画幅内部绝对定位滚动区，此容器不滚动 */
+            margin: 0 auto;
+            background: url('时间轴.png') no-repeat center center;
+            background-size: cover;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border-radius: 24px;  /* 圆润边框，更接近手机 */
+        }
+
+        /* 半透明遮罩层 — 仿2017，增强文字可读性，透出背景图氛围 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 30, 50, 0.78);  /* 深蓝半透，与时间轴背景协调 */
+            z-index: 1;
+            pointer-events: none;  /* 让点击穿透到内容 */
+        }
+
+        /* 主内容滚动区 — 绝对定位撑满，内边距留出底部导航空间 */
+        .main-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px 15px 100px;  /* 底部留白给导航按钮 */
+            scrollbar-width: thin;
+            scrollbar-color: #66B2FF rgba(255,255,255,0.1);
+        }
+
+        .main-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .main-container::-webkit-scrollbar-track {
+            background: rgba(102, 178, 255, 0.1);
+        }
+        .main-container::-webkit-scrollbar-thumb {
+            background: #66B2FF;
+            border-radius: 10px;
+        }
+
+        /* 页面标题 — 采用浅蓝主色调 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .page-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #99D6FF, #3399FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 10px rgba(51,153,255,0.3);
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: #e6f3ff;
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.5;
+            background: rgba(0,40,70,0.45);
+            padding: 8px 18px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(102,178,255,0.5);
+        }
+
+        /* 时间轴容器 — 相对定位，自然撑开 */
+        .timeline-container {
+            position: relative;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* 中心浅蓝线 */
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #66B2FF, #3399FF, transparent);
+            border-radius: 2px;
+            z-index: 3;
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: #66B2FF;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #66B2FF;
+        }
+
+        .timeline-line::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: #3399FF;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #3399FF;
+        }
+
+        .timeline {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 0 20px;
+        }
+
+        /* 年份节点 */
+        .year-node {
+            position: relative;
+            width: 100%;
+            margin-bottom: 70px;
+            z-index: 5;
+        }
+
+        .year-node-content {
+            position: relative;
+            width: 95%;
+            max-width: 580px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .year-node-content:hover {
+            transform: translateY(-3px);
+        }
+
+        .year-node-content.left {
+            flex-direction: row-reverse;
+        }
+
+        /* 年份标记 — 浅蓝氛围保留各节点独特色彩，统一增加蓝调 */
+        .year-marker {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            z-index: 6;
+            transition: all 0.3s ease;
+            background: rgba(102, 178, 255, 0.2);
+            border: 2px solid rgba(102, 178, 255, 0.7);
+            box-shadow: 0 0 25px rgba(51,153,255,0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .year-node-content.left .year-marker {
+            margin-left: 15px;
+        }
+
+        .year-node-content.right .year-marker {
+            margin-right: 15px;
+        }
+
+        .year-number {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-shadow: 0 0 8px #3399FF;
+        }
+
+        .year-keyword {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(0,80,120,0.5);
+            backdrop-filter: blur(4px);
+            color: #e6f7ff;
+            border: 1px solid #99D6FF;
+        }
+
+        /* 节点连接点 */
+        .node-connector {
+            position: absolute;
+            top: 50%;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4;
+            transform: translateY(-50%);
+            background: rgba(102, 178, 255, 0.5);
+            box-shadow: 0 0 15px #3399FF;
+        }
+
+        .year-node-content.left .node-connector {
+            right: -14px;
+        }
+
+        .year-node-content.right .node-connector {
+            left: -14px;
+        }
+
+        .connector-inner {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 12px #66B2FF;
+        }
+
+        /* 卡片 — 半透磨砂玻璃，深色背景上清晰 */
+        .node-card {
+            flex: 1;
+            background: rgba(20, 40, 60, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 16px 18px;
+            border: 1px solid rgba(102, 178, 255, 0.5);
+            box-shadow: 0 8px 25px rgba(0,40,80,0.5);
+            transition: all 0.25s ease;
+        }
+
+        .node-card:hover {
+            border-color: #66B2FF;
+            box-shadow: 0 12px 30px rgba(51,153,255,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .case-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 1px 4px black;
+        }
+
+        .case-media {
+            font-size: 0.75rem;
+            color: #cceeff;
+            background: rgba(51,153,255,0.3);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid #66B2FF;
+        }
+
+        .case-description {
+            color: #f0faff;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 0.88rem;
+            text-shadow: 0 1px 2px black;
+        }
+
+        .case-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.78rem;
+            color: #e0f0ff;
+            background: rgba(0,0,0,0.25);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .stat-icon {
+            color: #99D6FF;
+        }
+
+        .case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 0.72rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(51,153,255,0.2);
+            color: #ffffff;
+            border: 1px solid #66B2FF;
+            backdrop-filter: blur(2px);
+        }
+
+        /* 关键数字悬浮提示 — 保留但手机以点击为主 */
+        .year-hint {
+            position: absolute;
+            top: 50%;
+            width: 200px;
+            padding: 10px 15px;
+            background: rgba(10, 30, 50, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border-left: 4px solid #66B2FF;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .year-node-content:hover .year-hint {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .year-node-content.left .year-hint {
+            right: calc(100% + 15px);
+            transform: translateY(-50%);
+        }
+
+        .year-node-content.right .year-hint {
+            left: calc(100% + 15px);
+            transform: translateY(-50%);
+        }
+
+        .hint-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #99D6FF;
+        }
+
+        .hint-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #cceeff;
+        }
+
+        .hint-desc {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* ---------- 底部导航按钮 · 完全仿照2017样式，但保留原文字 ---------- */
+        .timeline-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(8, 28, 40, 0.9);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(102, 178, 255, 0.6);
+            border-bottom: 1px solid rgba(102, 178, 255, 0.3);
+            z-index: 1000;
+            padding: 12px 15px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            background: rgba(51, 153, 255, 0.12);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            border: 1px solid rgba(102, 178, 255, 0.5);
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(51, 153, 255, 0.3);
+            border-color: #66B2FF;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(51,153,255,0.4);
+        }
+
+        .nav-btn.prev {
+            flex-direction: row;
+        }
+
+        .nav-btn.next {
+            flex-direction: row-reverse;
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            color: #99D6FF;
+        }
+
+        .nav-text {
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* 中间留白：不放按钮，保持对称 */
+        .nav-placeholder {
+            width: 40px;
+            height: 10px;
+        }
+
+        /* ---------- 年份详情浮层 (保持不变，微调主色) ---------- */
+        .year-detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 20, 40, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 15px;
+        }
+
+        .year-detail-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .detail-content {
+            width: 100%;
+            max-width: 560px;
+            max-height: 85vh;
+            background: linear-gradient(145deg, #eaf6ff, #d4ebff);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,80,120,0.6);
+            border: 1px solid #99CCFF;
+            animation: detailSlideIn 0.4s ease-out;
+        }
+
+        @keyframes detailSlideIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .detail-header {
+            padding: 20px 25px;
+            background: rgba(51, 153, 255, 0.2);
+            border-bottom: 1px solid #66B2FF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-year {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3399FF, #66B2FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .detail-keyword {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #004b7a;
+        }
+
+        .close-detail {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(51,153,255,0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-detail:hover {
+            background: rgba(51,153,255,0.5);
+            transform: rotate(90deg);
+        }
+
+        .close-icon {
+            font-size: 1.5rem;
+            color: #003b66;
+        }
+
+        .detail-body {
+            padding: 25px;
+            overflow-y: auto;
+            max-height: calc(85vh - 110px);
+            color: #02457a;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1A80D9;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #99CCFF;
+            padding-bottom: 5px;
+        }
+
+        .section-content {
+            color: #02457a;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .case-video {
+            width: 100%;
+            height: 180px;
+            border-radius: 16px;
+            background: #cce4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1A80D9;
+            margin: 15px 0;
+        }
+
+        .dimension-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .dimension-btn {
+            padding: 8px 16px;
+            background: rgba(51,153,255,0.2);
+            border: 1px solid #66B2FF;
+            border-radius: 30px;
+            color: #0066b3;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .dimension-btn:hover {
+            background: #66B2FF;
+            color: white;
+        }
+
+        /* 手机窄屏适配 */
+        @media (max-width: 640px) {
+            #page-container {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+            .main-container {
+                padding: 15px 12px 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 手机画幅：固定640x1008，背景图为“时间轴.png” -->
+    <div id="page-container">
+        <!-- 半透明遮罩，透出背景图且保证文字清晰 -->
+        <div class="overlay"></div>
+
+        <!-- 主滚动内容区 -->
+        <div class="main-container" id="mainContainer">
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1 class="page-title">进化·时间轴</h1>
+                <p class="page-subtitle">2017-2025 主流媒体与青年文化的碰撞融合</p>
+            </div>
+
+            <!-- 时间轴主体容器 -->
+            <div class="timeline-container" id="timelineContainer">
+                <div class="timeline-line"></div>   <!-- 浅蓝中心线 -->
+                <div class="timeline" id="timeline"></div>
+            </div>
+        </div> <!-- end main-container -->
+
+        <!-- 底部跳转按钮 · 完全仿照2017格式，保留文字“返回首页”和“进入2017” -->
+        <div class="timeline-nav">
+            <div class="nav-buttons">
+                <!-- 左侧：返回首页 -->
+                <a href="https://sdwhsy123.github.io/No.1/indexpage.html" class="nav-btn prev">
+                    <i class="fas fa-chevron-left nav-icon"></i>
+                    <span class="nav-text">返回首页</span>
+                </a>
+                <!-- 中间无按钮，但保留占位以保持对称，也可省略 -->
+                <span class="nav-placeholder"></span>
+                <!-- 右侧：进入2017 -->
+                <a href="https://sdwhsy123.github.io/No.1/2017page.html" class="nav-btn next">
+                    <span class="nav-text">进入2017</span>
+                    <i class="fas fa-chevron-right nav-icon"></i>
+                </a>
+            </div>
+        </div>
+    </div> <!-- end page-container -->
+
+    <!-- 年份详情浮层 -->
+    <div class="year-detail-overlay" id="yearDetailOverlay">
+        <div class="detail-content">
+            <div class="detail-header">
+                <div>
+                    <div class="detail-year" id="detailYear">2024</div>
+                    <div class="detail-keyword" id="detailKeyword">深耕·常态</div>
+                </div>
+                <div class="close-detail" id="closeDetail">
+                    <div class="close-icon"><i class="fas fa-times"></i></div>
+                </div>
+            </div>
+            <div class="detail-body" id="detailBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // ------- 完整时间轴数据（保留之前填充的2025完善信息）-------
+        const timelineData = [
+            {
+                year: 2017,
+                keyword: "破冰·试水",
+                color: "#3399FF",
+                caseTitle: "人民日报客户端『军装照』H5",
+                caseMedia: "人民日报",
+                caseDescription: "建军90周年之际推出的互动H5，用户上传照片即可生成虚拟军装照，上线10天浏览量突破10亿，成为现象级传播案例。",
+                stats: [
+                    {icon: "fa-eye", value: "10亿+", label: "浏览量"},
+                    {icon: "fa-share", value: "5000万+", label: "分享量"},
+                    {icon: "fa-user", value: "2亿+", label: "参与人数"}
+                ],
+                tags: ["互动H5", "人脸融合", "社交传播", "情感连接"],
+                keyNumber: "H5浏览量突破10亿",
+                keyDesc: "主流媒体首个现象级互动传播案例",
+                detail: {
+                    narrative: "通过个人身份与宏大主题（建军90周年）的情感连接，实现主流价值的柔性表达。",
+                    expression: "采用人脸融合技术，将用户照片与军装照合成，结果可分享至社交平台。",
+                    technology: "H5互动、人脸识别与融合技术、社交分享接口。",
+                    platform: "微信生态为主，通过朋友圈、群聊裂变传播。",
+                    impact: "证明了主流媒体通过互动技术实现爆炸式传播的可能性，开启年轻化传播新篇章。"
+                }
+            },
+            {
+                year: 2018,
+                keyword: "入圈·扎根",
+                color: "#4DA6FF",
+                caseTitle: "央视新闻入驻抖音、B站",
+                caseMedia: "央视新闻",
+                caseDescription: "央视新闻正式入驻抖音、B站等青年文化平台，发布《主播说联播》等短视频内容，快速收获千万级年轻粉丝。",
+                stats: [
+                    {icon: "fa-users", value: "3000万+", label: "抖音粉丝"},
+                    {icon: "fa-video", value: "500+", label: "短视频"},
+                    {icon: "fa-heart", value: "2亿+", label: "总点赞"}
+                ],
+                tags: ["平台迁移", "人格化", "短视频", "竖屏"],
+                keyNumber: "主流媒体抖音号增长率300%",
+                keyDesc: "主流媒体全面进军短视频平台",
+                detail: {
+                    narrative: "从传统电视端的『播新闻』转变为短视频平台的『聊新闻』，语态更加亲和。",
+                    expression: "竖屏拍摄、快节奏剪辑、网络化字幕、主播个性化表达。",
+                    technology: "移动优先拍摄、轻量化后期制作、平台算法适配。",
+                    platform: "抖音、B站、快手等短视频平台全面布局。",
+                    impact: "主动进入青年文化主场，建立新媒体阵地，为后续内容创新奠定基础。"
+                }
+            },
+            {
+                year: 2019,
+                keyword: "共振·破圈",
+                color: "#66CCFF",
+                caseTitle: "B站首届跨年晚会『最美的夜』",
+                caseMedia: "央视新闻×Bilibili",
+                caseDescription: "B站首届跨年晚会融合二次元、国风、流行文化，人民日报、央视新闻等主流媒体深度报道，引发全民共鸣。",
+                stats: [
+                    {icon: "fa-play-circle", value: "1.3亿", label: "播放量"},
+                    {icon: "fa-comment-alt", value: "300万", label: "弹幕数"},
+                    {icon: "fa-chart-line", value: "9.3", label: "豆瓣评分"}
+                ],
+                tags: ["文化IP", "跨代际对话", "亚文化共鸣", "仪式感重构"],
+                keyNumber: "18-25岁观众占比67%",
+                keyDesc: "主流价值与青年亚文化成功共振",
+                detail: {
+                    narrative: "打破传统晚会模式，以青年文化谱系重构跨年仪式，实现代际审美融合。",
+                    expression: "融合交响乐、虚拟偶像、游戏IP、影视经典等多元文化符号。",
+                    technology: "4K超清制作、AR虚拟舞台、实时弹幕互动系统。",
+                    platform: "B站直播+点播，主流媒体二次传播，社交媒体话题发酵。",
+                    impact: "主流价值与青年亚文化成功『共振』的标志性事件，证明主流媒体可以『懂年轻人』。"
+                }
+            },
+            {
+                year: "2020-2021",
+                keyword: "赋能·共情",
+                color: "#7FCCFF",
+                caseTitle: "新华社『数字记者』小诤",
+                caseMedia: "新华社",
+                caseDescription: "新华社推出数字记者『小诤』，通过VR/AR技术带领观众沉浸式体验中国空间站、火星探测等重大科技成就。",
+                stats: [
+                    {icon: "fa-vr-cardboard", value: "VR报道", label: "创新形式"},
+                    {icon: "fa-globe", value: "50+", label: "国家覆盖"},
+                    {icon: "fa-user", value: "18-30岁", label: "核心受众"}
+                ],
+                tags: ["虚拟主播", "沉浸式报道", "科技传播", "AI生成"],
+                keyNumber: "青年受众触达率提升210%",
+                keyDesc: "虚拟数字人技术应用元年",
+                detail: {
+                    narrative: "通过虚拟数字人记者，将硬核科技报道转化为可体验、可互动的青春叙事。",
+                    expression: "3D建模、动作捕捉、实时渲染、虚拟场景交互。",
+                    technology: "VR/AR技术、AI驱动、三维引擎、5G传输。",
+                    platform: "新华社客户端、社交平台、VR设备多端覆盖。",
+                    impact: "技术不仅是形式创新，更成为建构年轻化叙事的新语言，拓展了新闻报道的边界。"
+                }
+            },
+            {
+                year: 2022,
+                keyword: "融合·共创",
+                color: "#99D6FF",
+                caseTitle: "冬奥会期间的『全民二创』",
+                caseMedia: "央视新闻×用户共创",
+                caseDescription: "冬奥会期间，冰墩墩、运动员表情包、比赛混剪视频等用户二创内容爆发，主流媒体设置议题，用户参与内容共创。",
+                stats: [
+                    {icon: "fa-hashtag", value: "500亿", label: "话题阅读"},
+                    {icon: "fa-edit", value: "100万+", label: "二创作品"},
+                    {icon: "fa-fire", value: "50+", label: "热搜话题"}
+                ],
+                tags: ["参与式文化", "用户生成", "表情包", "混剪"],
+                keyNumber: "相关话题阅读量超500亿",
+                keyDesc: "从单向输出到双向狂欢",
+                detail: {
+                    narrative: "官方设置核心议题（冬奥、运动员故事），开放内容创作空间，激发用户创造力。",
+                    expression: "表情包、短视频混剪、动漫形象、同人创作等多元化表达形式。",
+                    technology: "轻量化创作工具、模板化设计、一键分享机制。",
+                    platform: "微博、抖音、B站、小红书多平台联动，形成传播矩阵。",
+                    impact: "传播模式从『单向输出』转变为『双向狂欢』，用户不仅是消费者更是生产者。"
+                }
+            },
+            {
+                year: "2023-2024",
+                keyword: "赋能·共情",
+                color: "#B2D9FF",
+                caseTitle: "理响中国之铿锵有理系列理论视频",
+                caseMedia: "光明日报",
+                caseDescription: "邀请13位'80后、90后'党校青年专家，用青年视角和生动故事解读党的创新理论。突破传统理论宣传的刻板印象，以短视频、动漫、访谈等多种形式呈现，推动理论传播'活起来''潮起来'。",
+                stats: [
+                    {icon: "fa-clock", value: "15-30分钟", label: "视频时长"},
+                    {icon: "fa-graduation-cap", value: "80后、90后", label: "合作对象"},
+                    {icon: "fa-comments", value: "10万+", label: "深度评论"}
+                ],
+                tags: ["深度对话", "理性探讨", "价值引领", "共识构建"],
+                keyNumber: "平均完播率72%",
+                keyDesc: "从形式吸引到价值对话",
+                detail: {
+                    narrative: "不回避青年现实困惑，通过平等对话探讨社会议题，寻求价值共识。",
+                    expression: "长视频对谈、数据可视化、案例拆解、理性分析。",
+                    technology: "多机位拍摄、动态数据可视化、深度访谈剪辑。",
+                    platform: "光明日报客户端发布，同步主流媒体平台，形成议题联动。",
+                    impact: "年轻化传播从『形式吸引』深入到『价值对话』和『共识构建』，增强主流媒体思想引领力。"
+                }
+            },
+            {
+                year: 2025,
+                keyword: "智媒·生态",
+                color: "#66B2FF",
+                caseTitle: "央视网《不被定义的TA》青年纪实系列",
+                caseMedia: "中央广播电视总台",
+                caseDescription: "一档深入记录当代中国青年多元选择的纪实节目，每集聚焦一个'不被定义'的个体：从非遗传承青年、乡村创业者，到跨性别艺术家、小众职业探索者。镜头以平视角度记录他们的挣扎、选择与坚持，不设框架，不贴标签，呈现青年群体的真实生态与内在力量。",
+                stats: [
+                    {icon: "fa-eye", value: "8000万+", label: "全网播放量"},
+                    {icon: "fa-star", value: "9.2", label: "豆瓣评分"},
+                    {icon: "fa-message", value: "50万+", label: "社交讨论"}
+                ],
+                tags: ["纪实影像", "平视视角", "青年群像", "价值多元", "智媒生态"],
+                keyNumber: "豆瓣评分9.2，Z世代占比78%",
+                keyDesc: "主流媒体纪实内容年轻化标杆",
+                detail: {
+                    narrative: "以不定义、不评判的观察视角，记录青年个体化生命故事，构建时代精神镜像。",
+                    expression: "电影化纪实手法，无采访者介入，纯观察式记录；每集15-20分钟微纪实。",
+                    technology: "4K超高清拍摄、无人机航拍、智能剪辑辅助、多平台自适应编码。",
+                    platform: "央视网、B站、抖音同步上线，话题#不被定义的TA#引发用户共鸣与二次创作。",
+                    impact: "主流媒体纪实内容年轻化转型的标杆之作，重新定义青年报道的『平视伦理』，智媒生态下真实的力量。"
+                }
+            }
+        ];
+
+        // ------- 初始化页面（保留交互，完全适配新画幅）-------
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeline = document.getElementById('timeline');
+            const yearDetailOverlay = document.getElementById('yearDetailOverlay');
+            const closeDetailBtn = document.getElementById('closeDetail');
+
+            // 生成时间轴节点
+            function generateTimelineNodes() {
+                timeline.innerHTML = '';
+                timelineData.forEach((data, index) => {
+                    const isLeft = index % 2 === 0;
+                    const node = document.createElement('div');
+                    node.className = `year-node ${isLeft ? 'left' : 'right'}`;
+                    node.dataset.year = data.year;
+
+                    // 使用数据中的色彩，叠加浅蓝氛围
+                    const markerStyle = `background: radial-gradient(circle, ${data.color}35 0%, ${data.color}15 100%); border: 2px solid ${data.color}aa; box-shadow: 0 0 25px ${data.color}80;`;
+                    const connectorStyle = `background: ${data.color}70; box-shadow: 0 0 15px ${data.color};`;
+                    const connectorInnerStyle = `background: #ffffff; box-shadow: 0 0 12px ${data.color};`;
+
+                    const statsHTML = data.stats.map(stat => 
+                        `<div class="stat-item"><i class="fas ${stat.icon} stat-icon"></i><span>${stat.value} ${stat.label}</span></div>`
+                    ).join('');
+                    const tagsHTML = data.tags.map(tag => `<div class="tag">${tag}</div>`).join('');
+
+                    node.innerHTML = `
+                        <div class="year-node-content ${isLeft ? 'left' : 'right'}">
+                            <div class="year-marker" style="${markerStyle}">
+                                <div class="year-number">${data.year}</div>
+                                <div class="year-keyword">${data.keyword}</div>
+                            </div>
+                            <div class="node-connector" style="${connectorStyle}">
+                                <div class="connector-inner" style="${connectorInnerStyle}"></div>
+                            </div>
+                            <div class="node-card">
+                                <div class="card-header">
+                                    <div class="case-title">${data.caseTitle}</div>
+                                    <div class="case-media">${data.caseMedia}</div>
+                                </div>
+                                <div class="case-description">${data.caseDescription}</div>
+                                <div class="case-stats">${statsHTML}</div>
+                                <div class="case-tags">${tagsHTML}</div>
+                            </div>
+                            <div class="year-hint" style="border-left-color: ${data.color}">
+                                <div class="hint-title">关键数字</div>
+                                <div class="hint-number">${data.keyNumber || '—'}</div>
+                                <div class="hint-desc">${data.keyDesc || '主流媒体青年化进程'}</div>
+                            </div>
+                        </div>
+                    `;
+                    timeline.appendChild(node);
+
+                    // 点击卡片展示详情
+                    node.addEventListener('click', function(e) {
+                        if (!e.target.closest('.year-hint')) {
+                            showYearDetail(data);
+                        }
+                    });
+                });
+            }
+
+            // 显示详情浮层
+            function showYearDetail(data) {
+                document.getElementById('detailYear').textContent = data.year;
+                document.getElementById('detailKeyword').textContent = data.keyword;
+                const detailBody = document.getElementById('detailBody');
+                detailBody.innerHTML = `
+                    <div class="detail-section">
+                        <div class="section-title">案例概述</div>
+                        <div class="section-content">
+                            <p><strong>${data.caseTitle}</strong> — ${data.caseMedia}</p>
+                            <p>${data.caseDescription}</p>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="section-title">关键数据</div>
+                        <div class="section-content">
+                            <div class="case-stats">${data.stats.map(stat => `<div class="stat-item"><i class="fas ${stat.icon} stat-icon"></i><span><strong>${stat.value}</strong> ${stat.label}</span></div>`).join('')}</div>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="section-title">案例视频预览</div>
+                        <div class="case-video">
+                            <div style="text-align:center;">
+                                <i class="fas fa-play-circle" style="font-size:2.8rem; opacity:0.8;"></i>
+                                <p style="margin-top:5px;">${data.year} 案例精选 · 智媒生态</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="section-title">四维分析</div>
+                        <div class="section-content">
+                            <p><strong>叙事策略：</strong>${data.detail.narrative || '深入青年语境'}</p>
+                            <p><strong>表达形式：</strong>${data.detail.expression || '融合多元媒介'}</p>
+                            <p><strong>技术应用：</strong>${data.detail.technology || '前沿智能技术'}</p>
+                            <p><strong>平台策略：</strong>${data.detail.platform || '全平台覆盖'}</p>
+                            <p><strong>传播影响：</strong>${data.detail.impact || '强化主流价值引领'}</p>
+                        </div>
+                        <div class="dimension-buttons">
+                            <div class="dimension-btn" data-dimension="narrative">叙事分析</div>
+                            <div class="dimension-btn" data-dimension="expression">表达分析</div>
+                            <div class="dimension-btn" data-dimension="technology">技术分析</div>
+                            <div class="dimension-btn" data-dimension="platform">平台分析</div>
+                        </div>
+                    </div>
+                `;
+                yearDetailOverlay.classList.add('active');
+
+                // 维度按钮点击提示
+                document.querySelectorAll('.dimension-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        alert(`📊 ${this.dataset.dimension} 详细分析面板 (完整版可展开)`);
+                    });
+                });
+            }
+
+            // 关闭浮层
+            closeDetailBtn.addEventListener('click', function() {
+                yearDetailOverlay.classList.remove('active');
+            });
+            yearDetailOverlay.addEventListener('click', function(e) {
+                if (e.target === yearDetailOverlay) yearDetailOverlay.classList.remove('active');
+            });
+
+            // 键盘ESC关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && yearDetailOverlay.classList.contains('active')) {
+                    yearDetailOverlay.classList.remove('active');
+                }
+            });
+
+            // 启动！
+            generateTimelineNodes();
+        });
+    </script>
+</body>
+</html>
