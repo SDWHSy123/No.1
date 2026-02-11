@@ -32,7 +32,8 @@
             position: relative;
             overflow: hidden;
             background-image: url('封面.png');
-            background-size: cover;
+            /* 修改背景图样式以覆盖全屏 */
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -368,6 +369,8 @@
                 max-width: 640px;
                 max-height: 1008px;
                 border-radius: 0;
+                /* 确保背景图在移动设备上也完全覆盖 */
+                background-size: 100% 100%;
             }
             
             .main-title {
@@ -412,6 +415,8 @@
         @media (max-height: 1008px) {
             #page-container {
                 height: 100vh;
+                /* 确保背景图在高度不足时也完全覆盖 */
+                background-size: 100% 100%;
             }
             
             .main-title {
@@ -430,6 +435,13 @@
             
             .interaction-hint {
                 bottom: 60px;
+            }
+        }
+        
+        /* 新增：确保背景图覆盖整个容器 */
+        @media (orientation: portrait) {
+            #page-container {
+                background-size: 100% 100%;
             }
         }
     </style>
