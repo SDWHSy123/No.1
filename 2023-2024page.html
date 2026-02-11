@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2023-2024：中央主流媒体青春化传播案例可视化</title>
+    <title>2023-2024：中央主流媒体青春化传播案例可视化 · 横版导航&清透背景</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=AlibabaPuHuiTi:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+        /* ========== 全局重置 ========== */
         * {
             margin: 0;
             padding: 0;
@@ -35,18 +36,17 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* 半透明遮罩层 */
+        /* ----- 半透明遮罩层 —— 大幅降低不透明度，让背景图清晰可见 ----- */
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(26, 10, 10, 0.85);
+            background: rgba(26, 10, 10, 0.45);  /* 原0.85 → 0.45，背景图透出 */
             z-index: 1;
         }
 
-        /* 主内容容器 */
         .main-container {
             position: absolute;
             top: 0;
@@ -59,7 +59,6 @@
             padding: 0 0 80px 0;
         }
 
-        /* 返回按钮 */
         .back-button {
             position: fixed;
             top: 15px;
@@ -90,7 +89,6 @@
             color: #ff4500;
         }
 
-        /* 页面标题区域 */
         .page-header {
             padding: 80px 15px 25px;
             text-align: center;
@@ -223,7 +221,6 @@
             font-size: 0.9rem;
         }
 
-        /* 数据统计 */
         .case-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -270,7 +267,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* 标签区域 */
         .case-tags {
             display: flex;
             flex-wrap: wrap;
@@ -293,7 +289,7 @@
             color: #ffd700;
         }
 
-        /* 数据可视化区域 */
+        /* 可视化区域 */
         .visualization-section {
             margin: 0 15px 20px;
         }
@@ -313,7 +309,6 @@
             color: #ff8c00;
         }
 
-        /* 词云图容器 */
         .word-cloud-container {
             background: rgba(178, 34, 34, 0.9);
             backdrop-filter: blur(10px);
@@ -354,7 +349,6 @@
         .word-size-4 { font-size: 1.7rem; background: rgba(139, 0, 0, 0.35); color: #fff; }
         .word-size-5 { font-size: 2rem; background: rgba(255, 69, 0, 0.4); color: #ff8c00; }
 
-        /* 聚类网络图容器 */
         .network-container {
             background: rgba(178, 34, 34, 0.9);
             backdrop-filter: blur(10px);
@@ -408,7 +402,6 @@
             transform: scale(1.1);
         }
 
-        /* 饼图容器 */
         .pie-container {
             background: rgba(178, 34, 34, 0.9);
             backdrop-filter: blur(10px);
@@ -474,7 +467,6 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
-        /* 柱状图容器 */
         .bar-container {
             background: rgba(178, 34, 34, 0.9);
             backdrop-filter: blur(10px);
@@ -529,7 +521,7 @@
             font-size: 0.8rem;
         }
 
-        /* 复杂的H5互动区域 */
+        /* 互动模拟器 */
         .interactive-section {
             margin: 0 15px 20px;
         }
@@ -565,7 +557,6 @@
             max-width: 800px;
         }
 
-        /* H5模拟器界面 */
         .simulator {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -816,7 +807,7 @@
             border: 1px solid rgba(255, 140, 0, 0.3);
         }
 
-        /* 时间线导航 - 调整为2019年风格 */
+        /* ========== 底部时间轴导航 ========== */
         .timeline-nav {
             position: absolute;
             bottom: 0;
@@ -900,115 +891,124 @@
             box-shadow: 0 8px 20px rgba(255, 69, 0, 0.3);
         }
 
-        /* 响应式设计 - 仿照2019文件 */
+        /* ========== 响应式调整 ========== */
         @media (max-width: 640px) {
             #page-container {
                 width: 100%;
                 height: 100%;
                 box-shadow: none;
             }
-            
             .case-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
-            .video-container {
-                height: 180px;
+            .simulator {
+                grid-template-columns: 1fr;
             }
-            
-            .modal-content {
-                width: 90%;
-                padding: 20px;
-            }
-            
             .nav-buttons {
                 flex-direction: row;
                 gap: 8px;
             }
-            
             .nav-btn {
                 width: auto;
                 justify-content: center;
                 padding: 8px 10px;
             }
-            
             .timeline-btn {
                 padding: 8px 12px;
                 font-size: 0.75rem;
             }
-            
-            .simulator {
-                grid-template-columns: 1fr;
-            }
         }
 
+        /* ----- 重写480px及以下：底部导航强制横排，背景更透 ----- */
         @media (max-width: 480px) {
             .page-header {
                 padding: 80px 15px 25px;
             }
-            
             .year-badge {
                 font-size: 3rem;
             }
-            
             .case-card, .visualization-section, .interactive-section {
                 margin-left: 10px;
                 margin-right: 10px;
             }
-            
             .case-stats {
                 grid-template-columns: 1fr;
             }
-            
             .stat-item {
                 padding: 10px;
             }
-            
             .network-container {
                 height: 250px;
             }
-            
             .network-diagram {
                 height: 200px;
             }
-            
-            .timeline-nav {
-                padding: 10px;
-            }
-            
-            .chart-tab {
-                min-width: 90px;
-                font-size: 0.75rem;
-            }
-            
-            .modal-content {
-                width: 95%;
-                padding: 15px;
-            }
-            
-            .nav-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .nav-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .timeline-btn {
-                width: 100%;
-            }
-            
             .result-stats {
                 grid-template-columns: 1fr;
+            }
+
+            /* ---------- 底部导航：坚决横排，三按钮等宽一行显示 ---------- */
+            .nav-buttons {
+                flex-direction: row !important;          /* 横排 */
+                flex-wrap: nowrap !important;           /* 禁止换行 */
+                gap: 6px;
+                justify-content: center;
+            }
+            .nav-btn, 
+            .timeline-btn {
+                width: auto !important;                 /* 取消100%宽度 */
+                flex: 1 1 0;                            /* 等分宽度 */
+                min-width: 0;                           /* 允许压缩 */
+                padding: 8px 4px;                       /* 水平内边距减少 */
+                font-size: 0.68rem;                     /* 字体略小 */
+                margin: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: normal;                   /* 允许文字换行 */
+                line-height: 1.2;
+            }
+            .nav-btn .nav-text {
+                white-space: normal;
+                font-size: 0.65rem;
+            }
+            .nav-year {
+                font-size: 0.55rem;
+                white-space: normal;
+            }
+            .timeline-btn {
+                padding: 8px 4px;
+                font-size: 0.68rem;
+                white-space: nowrap;                  /* “返回时间轴”不换行 */
+                flex: 1 1 0;
+            }
+            /* 移除之前可能干扰的宽度设置 */
+            .nav-btn.prev, .nav-btn.next {
+                flex: 1 1 0;
+            }
+            .nav-icon {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* 极小屏（如iPhone SE 320px）再微调 */
+        @media (max-width: 360px) {
+            .nav-btn, .timeline-btn {
+                font-size: 0.6rem;
+                padding: 6px 2px;
+            }
+            .nav-year {
+                font-size: 0.5rem;
+            }
+            .nav-icon {
+                font-size: 0.7rem;
             }
         }
     </style>
 </head>
 <body>
     <div id="page-container">
-        <!-- 半透明遮罩层 -->
+        <!-- 半透明遮罩层：不透明度已降低至0.45，背景图清晰可见 -->
         <div class="overlay"></div>
         
         <!-- 返回按钮 -->
@@ -1168,18 +1168,14 @@
                     青春化传播数据可视化分析
                 </h2>
                 
-                <!-- 词云图 -->
                 <div class="word-cloud-container">
                     <h3 class="section-title">
                         <i class="fas fa-cloud section-title-icon"></i>
                         青春化传播关键词云
                     </h3>
-                    <div class="word-cloud" id="wordCloud">
-                        <!-- 词云内容将通过JS动态生成 -->
-                    </div>
+                    <div class="word-cloud" id="wordCloud"></div>
                 </div>
                 
-                <!-- 聚类网络图 - 使用D3.js -->
                 <div class="network-container">
                     <h3 class="section-title">
                         <i class="fas fa-project-diagram section-title-icon"></i>
@@ -1201,7 +1197,6 @@
                     </div>
                 </div>
                 
-                <!-- 饼图 -->
                 <div class="pie-container">
                     <h3 class="section-title">
                         <i class="fas fa-chart-pie section-title-icon"></i>
@@ -1228,15 +1223,12 @@
                     </div>
                 </div>
                 
-                <!-- 柱状图 -->
                 <div class="bar-container">
                     <h3 class="section-title">
                         <i class="fas fa-chart-line section-title-icon"></i>
                         青春化传播效果对比
                     </h3>
-                    <div class="bar-chart" id="barChart">
-                        <!-- 柱状图将通过JS动态生成 -->
-                    </div>
+                    <div class="bar-chart" id="barChart"></div>
                 </div>
             </div>
             
@@ -1253,7 +1245,6 @@
                     
                     <div class="simulator">
                         <div class="simulator-controls">
-                            <!-- 策略选择 -->
                             <div class="control-group">
                                 <div class="control-title">
                                     <i class="fas fa-chess-queen"></i> 选择核心策略
@@ -1283,7 +1274,6 @@
                                 </div>
                             </div>
                             
-                            <!-- 媒体选择 -->
                             <div class="control-group">
                                 <div class="control-title">
                                     <i class="fas fa-tv"></i> 选择目标媒体
@@ -1313,7 +1303,6 @@
                                 </div>
                             </div>
                             
-                            <!-- 受众选择 -->
                             <div class="control-group">
                                 <div class="control-title">
                                     <i class="fas fa-users"></i> 选择目标受众
@@ -1346,9 +1335,7 @@
                         
                         <div class="simulator-preview">
                             <div class="preview-title">方案预览</div>
-                            <div class="preview-content" id="previewContent">
-                                <!-- 预览内容将通过JS动态生成 -->
-                            </div>
+                            <div class="preview-content" id="previewContent"></div>
                         </div>
                     </div>
                     
@@ -1365,30 +1352,21 @@
                         <div class="result-title">
                             <i class="fas fa-chart-line"></i> 您的青春化传播方案
                         </div>
-                        
-                        <div class="result-stats" id="resultStats">
-                            <!-- 统计数据将通过JS动态生成 -->
-                        </div>
-                        
-                        <div class="result-details" id="resultDetails">
-                            <!-- 方案详情将通过JS动态生成 -->
-                        </div>
-                        
-                        <div class="result-features" id="resultFeatures">
-                            <!-- 方案特点将通过JS动态生成 -->
-                        </div>
+                        <div class="result-stats" id="resultStats"></div>
+                        <div class="result-details" id="resultDetails"></div>
+                        <div class="result-features" id="resultFeatures"></div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- 时间线导航 - 调整为2019年风格 -->
+        <!-- 时间线导航 - 已修改为强制横排，三按钮一行显示 -->
         <div class="timeline-nav">
             <div class="nav-buttons">
-                <a href="https://sdwhsy123.github.io/No.1/2022page.html" class="nav-btn prev">
+                <a href="https://sdwhsy123.github.io/No.1/2021-2022page.html" class="nav-btn prev">
                     <i class="fas fa-chevron-left nav-icon"></i>
                     <div class="nav-text">
-                        <div>2022：融合·共创</div>
+                        <div>2021-2022：探索·破圈</div>
                         <div class="nav-year">形式创新×平台合作×初步尝试</div>
                     </div>
                 </a>
@@ -1409,40 +1387,23 @@
     </div>
 
     <script>
-        // 页面初始化
+        // 页面初始化 (保持不变，功能完整)
         document.addEventListener('DOMContentLoaded', function() {
-            // 获取DOM元素
             const backButton = document.getElementById('backButton');
             const mainContainer = document.getElementById('mainContainer');
             const wordCloud = document.getElementById('wordCloud');
             const barChart = document.getElementById('barChart');
-            const timelineBtn = document.querySelector('.timeline-btn');
             
-            // 词云数据
             const wordCloudData = [
-                { text: '青春化', size: 5 },
-                { text: '语态转化', size: 4 },
-                { text: '技术驱动', size: 5 },
-                { text: '价值引领', size: 3 },
-                { text: 'IP焕新', size: 4 },
-                { text: 'AI技术', size: 3 },
-                { text: '互动传播', size: 3 },
-                { text: '青年专家', size: 2 },
-                { text: '短视频', size: 2 },
-                { text: '破圈传播', size: 4 },
-                { text: '代际共鸣', size: 3 },
-                { text: 'XR技术', size: 2 },
-                { text: '数据可视化', size: 2 },
-                { text: 'H5产品', size: 2 },
-                { text: '双向对话', size: 4 },
-                { text: '创意设计', size: 2 },
-                { text: '竖屏直播', size: 2 },
-                { text: '文化融合', size: 3 },
-                { text: '主流媒体', size: 4 },
-                { text: '青年文化', size: 3 }
+                { text: '青春化', size: 5 }, { text: '语态转化', size: 4 }, { text: '技术驱动', size: 5 },
+                { text: '价值引领', size: 3 }, { text: 'IP焕新', size: 4 }, { text: 'AI技术', size: 3 },
+                { text: '互动传播', size: 3 }, { text: '青年专家', size: 2 }, { text: '短视频', size: 2 },
+                { text: '破圈传播', size: 4 }, { text: '代际共鸣', size: 3 }, { text: 'XR技术', size: 2 },
+                { text: '数据可视化', size: 2 }, { text: 'H5产品', size: 2 }, { text: '双向对话', size: 4 },
+                { text: '创意设计', size: 2 }, { text: '竖屏直播', size: 2 }, { text: '文化融合', size: 3 },
+                { text: '主流媒体', size: 4 }, { text: '青年文化', size: 3 }
             ];
             
-            // 柱状图数据
             const barData = [
                 { label: '光明网', values: [85, 70, 65], colors: ['#ff8c00', '#ff4500', '#b22222'] },
                 { label: '人民日报', values: [90, 88, 82], colors: ['#ff8c00', '#ff4500', '#b22222'] },
@@ -1450,683 +1411,207 @@
                 { label: '行业平均', values: [70, 65, 60], colors: ['#ff8c00', '#ff4500', '#b22222'] }
             ];
             
-            // 模拟器数据
             const simulatorData = {
                 strategies: {
-                    voice: {
-                        name: '语态转化',
-                        description: '将宏大、严肃的内容用青年语言和叙事方式重新"翻译"，实现价值传播的"破圈"。',
-                        impact: 85,
-                        features: ['青年专家解读', '故事化表达', '短视频呈现', '情感共鸣']
-                    },
-                    tech: {
-                        name: '技术驱动',
-                        description: '运用AI、VR/AR、大数据等前沿技术，让内容变得酷炫、好玩、可参与。',
-                        impact: 90,
-                        features: ['AI生成内容', '交互式体验', '数据可视化', '沉浸式呈现']
-                    },
-                    ip: {
-                        name: 'IP焕新',
-                        description: '在国民级平台主动拥抱青年文化，实现代际共鸣与品牌年轻化。',
-                        impact: 88,
-                        features: ['文化符号重塑', '年轻主创团队', '社交媒体联动', '代际对话']
-                    }
+                    voice: { name: '语态转化', description: '将宏大、严肃的内容用青年语言和叙事方式重新"翻译"，实现价值传播的"破圈"。', impact: 85, features: ['青年专家解读', '故事化表达', '短视频呈现', '情感共鸣'] },
+                    tech: { name: '技术驱动', description: '运用AI、VR/AR、大数据等前沿技术，让内容变得酷炫、好玩、可参与。', impact: 90, features: ['AI生成内容', '交互式体验', '数据可视化', '沉浸式呈现'] },
+                    ip: { name: 'IP焕新', description: '在国民级平台主动拥抱青年文化，实现代际共鸣与品牌年轻化。', impact: 88, features: ['文化符号重塑', '年轻主创团队', '社交媒体联动', '代际对话'] }
                 },
                 media: {
-                    gmw: {
-                        name: '光明网',
-                        description: '擅长理论传播与价值引领，通过青年专家实现理论内容的青春化表达。',
-                        compatibility: { voice: 95, tech: 70, ip: 60 }
-                    },
-                    rmr: {
-                        name: '人民日报',
-                        description: '在重大主题报道中创新，运用前沿技术提升内容的互动性和传播力。',
-                        compatibility: { voice: 80, tech: 95, ip: 75 }
-                    },
-                    cctv: {
-                        name: '央视总台',
-                        description: '运营国民级文化IP，通过技术创新和内容创新吸引年轻观众。',
-                        compatibility: { voice: 70, tech: 85, ip: 95 }
-                    }
+                    gmw: { name: '光明网', description: '擅长理论传播与价值引领，通过青年专家实现理论内容的青春化表达。', compatibility: { voice: 95, tech: 70, ip: 60 } },
+                    rmr: { name: '人民日报', description: '在重大主题报道中创新，运用前沿技术提升内容的互动性和传播力。', compatibility: { voice: 80, tech: 95, ip: 75 } },
+                    cctv: { name: '央视总台', description: '运营国民级文化IP，通过技术创新和内容创新吸引年轻观众。', compatibility: { voice: 70, tech: 85, ip: 95 } }
                 },
                 audiences: {
-                    genz: {
-                        name: 'Z世代 (18-24岁)',
-                        description: '数字原住民，重视体验感与身份认同，偏好短视频和互动内容。',
-                        preference: { voice: 80, tech: 95, ip: 85 }
-                    },
-                    millennials: {
-                        name: '千禧一代 (25-34岁)',
-                        description: '职场主力，关注现实议题和社会价值，偏好深度内容和实用信息。',
-                        preference: { voice: 90, tech: 85, ip: 80 }
-                    },
-                    students: {
-                        name: '高校学生',
-                        description: '思想活跃，热衷知识分享和社群互动，偏好创新表达和思辨内容。',
-                        preference: { voice: 95, tech: 90, ip: 75 }
-                    }
+                    genz: { name: 'Z世代 (18-24岁)', description: '数字原住民，重视体验感与身份认同，偏好短视频和互动内容。', preference: { voice: 80, tech: 95, ip: 85 } },
+                    millennials: { name: '千禧一代 (25-34岁)', description: '职场主力，关注现实议题和社会价值，偏好深度内容和实用信息。', preference: { voice: 90, tech: 85, ip: 80 } },
+                    students: { name: '高校学生', description: '思想活跃，热衷知识分享和社群互动，偏好创新表达和思辨内容。', preference: { voice: 95, tech: 90, ip: 75 } }
                 }
             };
             
-            // 用户选择状态
-            let userSelections = {
-                strategy: null,
-                media: null,
-                audience: null
-            };
+            let userSelections = { strategy: null, media: null, audience: null };
             
-            // 创建词云
             function createWordCloud() {
-                // 清空容器
                 wordCloud.innerHTML = '';
-                
-                // 随机排列词云数据
                 const shuffledData = [...wordCloudData].sort(() => Math.random() - 0.5);
-                
-                // 创建词云元素
                 shuffledData.forEach(word => {
                     const wordElement = document.createElement('div');
                     wordElement.className = `word word-size-${word.size}`;
                     wordElement.textContent = word.text;
-                    
-                    // 添加点击事件
                     wordElement.addEventListener('click', function() {
                         showNotification(`关键词: ${word.text}`);
                         animateWord(this);
                     });
-                    
                     wordCloud.appendChild(wordElement);
                 });
             }
             
-            // 创建D3力导向图
             function createNetworkDiagram() {
                 const width = document.querySelector('#d3-network').parentElement.clientWidth;
                 const height = document.querySelector('#d3-network').parentElement.clientHeight;
-                
-                // 清空SVG
                 d3.select("#d3-network").html("");
-                
-                // 创建SVG
-                const svg = d3.select("#d3-network")
-                    .attr("width", width)
-                    .attr("height", height);
-                
-                // 添加缩放容器
+                const svg = d3.select("#d3-network").attr("width", width).attr("height", height);
                 const g = svg.append("g");
-                
-                // 缩放行为
-                const zoom = d3.zoom()
-                    .scaleExtent([0.5, 3])
-                    .on("zoom", (event) => {
-                        g.attr("transform", event.transform);
-                    });
-                
+                const zoom = d3.zoom().scaleExtent([0.5, 3]).on("zoom", (event) => { g.attr("transform", event.transform); });
                 svg.call(zoom);
-                
-                // 节点数据
                 const nodes = [
-                    { id: "青春化传播", group: 1, radius: 20 },
-                    { id: "光明网", group: 2, radius: 15 },
-                    { id: "人民日报", group: 2, radius: 16 },
-                    { id: "央视总台", group: 2, radius: 17 },
-                    { id: "语态转化", group: 3, radius: 13 },
-                    { id: "技术驱动", group: 3, radius: 14 },
-                    { id: "IP焕新", group: 3, radius: 13 },
-                    { id: "青年专家", group: 4, radius: 12 },
-                    { id: "年轻用户", group: 4, radius: 14 },
-                    { id: "Z世代", group: 4, radius: 13 },
-                    { id: "AI技术", group: 5, radius: 12 },
-                    { id: "XR/AR", group: 5, radius: 11 },
+                    { id: "青春化传播", group: 1, radius: 20 }, { id: "光明网", group: 2, radius: 15 },
+                    { id: "人民日报", group: 2, radius: 16 }, { id: "央视总台", group: 2, radius: 17 },
+                    { id: "语态转化", group: 3, radius: 13 }, { id: "技术驱动", group: 3, radius: 14 },
+                    { id: "IP焕新", group: 3, radius: 13 }, { id: "青年专家", group: 4, radius: 12 },
+                    { id: "年轻用户", group: 4, radius: 14 }, { id: "Z世代", group: 4, radius: 13 },
+                    { id: "AI技术", group: 5, radius: 12 }, { id: "XR/AR", group: 5, radius: 11 },
                     { id: "数据可视化", group: 5, radius: 12 }
                 ];
-                
-                // 连接数据
                 const links = [
-                    { source: "青春化传播", target: "光明网" },
-                    { source: "青春化传播", target: "人民日报" },
-                    { source: "青春化传播", target: "央视总台" },
-                    { source: "光明网", target: "语态转化" },
-                    { source: "人民日报", target: "技术驱动" },
-                    { source: "央视总台", target: "IP焕新" },
-                    { source: "语态转化", target: "青年专家" },
-                    { source: "技术驱动", target: "年轻用户" },
-                    { source: "IP焕新", target: "Z世代" },
-                    { source: "技术驱动", target: "AI技术" },
-                    { source: "技术驱动", target: "XR/AR" },
-                    { source: "技术驱动", target: "数据可视化" },
-                    { source: "光明网", target: "青年专家" },
-                    { source: "人民日报", target: "年轻用户" },
+                    { source: "青春化传播", target: "光明网" }, { source: "青春化传播", target: "人民日报" },
+                    { source: "青春化传播", target: "央视总台" }, { source: "光明网", target: "语态转化" },
+                    { source: "人民日报", target: "技术驱动" }, { source: "央视总台", target: "IP焕新" },
+                    { source: "语态转化", target: "青年专家" }, { source: "技术驱动", target: "年轻用户" },
+                    { source: "IP焕新", target: "Z世代" }, { source: "技术驱动", target: "AI技术" },
+                    { source: "技术驱动", target: "XR/AR" }, { source: "技术驱动", target: "数据可视化" },
+                    { source: "光明网", target: "青年专家" }, { source: "人民日报", target: "年轻用户" },
                     { source: "央视总台", target: "Z世代" }
                 ];
-                
-                // 力模拟
                 const simulation = d3.forceSimulation(nodes)
                     .force("link", d3.forceLink(links).id(d => d.id).distance(70))
                     .force("charge", d3.forceManyBody().strength(-150))
                     .force("center", d3.forceCenter(width / 2, height / 2))
                     .force("collision", d3.forceCollide().radius(d => d.radius + 5));
-                
-                // 创建连接线
-                const link = g.append("g")
-                    .attr("class", "links")
-                    .selectAll("line")
-                    .data(links)
-                    .enter()
-                    .append("line")
-                    .attr("stroke", "#ff8c00")
-                    .attr("stroke-opacity", 0.6)
-                    .attr("stroke-width", 2);
-                
-                // 创建节点
-                const node = g.append("g")
-                    .attr("class", "nodes")
-                    .selectAll("circle")
-                    .data(nodes)
-                    .enter()
-                    .append("circle")
-                    .attr("r", d => d.radius)
-                    .attr("fill", d => {
-                        const colors = {
-                            1: "#ff4500", // 核心概念
-                            2: "#ff8c00", // 主流媒体
-                            3: "#b22222", // 策略
-                            4: "#ffd700", // 青年要素
-                            5: "#daa520"  // 技术手段
-                        };
-                        return colors[d.group];
-                    })
-                    .attr("stroke", "#fff")
-                    .attr("stroke-width", 2)
-                    .call(d3.drag()
-                        .on("start", dragstarted)
-                        .on("drag", dragged)
-                        .on("end", dragended));
-                
-                // 添加节点标签
-                const labels = g.append("g")
-                    .attr("class", "labels")
-                    .selectAll("text")
-                    .data(nodes)
-                    .enter()
-                    .append("text")
-                    .text(d => d.id)
-                    .attr("font-size", d => Math.max(8, d.radius / 1.5))
-                    .attr("dx", 0)
-                    .attr("dy", ".35em")
-                    .attr("text-anchor", "middle")
-                    .attr("fill", "#fff")
-                    .attr("font-weight", "bold")
-                    .attr("pointer-events", "none");
-                
-                // 鼠标悬停效果
+                const link = g.append("g").attr("class", "links").selectAll("line").data(links).enter().append("line").attr("stroke", "#ff8c00").attr("stroke-opacity", 0.6).attr("stroke-width", 2);
+                const node = g.append("g").attr("class", "nodes").selectAll("circle").data(nodes).enter().append("circle").attr("r", d => d.radius).attr("fill", d => { const colors = { 1: "#ff4500", 2: "#ff8c00", 3: "#b22222", 4: "#ffd700", 5: "#daa520" }; return colors[d.group]; }).attr("stroke", "#fff").attr("stroke-width", 2).call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+                const labels = g.append("g").attr("class", "labels").selectAll("text").data(nodes).enter().append("text").text(d => d.id).attr("font-size", d => Math.max(8, d.radius / 1.5)).attr("dx", 0).attr("dy", ".35em").attr("text-anchor", "middle").attr("fill", "#fff").attr("font-weight", "bold").attr("pointer-events", "none");
                 node.on("mouseover", function(event, d) {
-                    // 高亮当前节点
-                    d3.select(this)
-                        .transition()
-                        .duration(200)
-                        .attr("r", d.radius * 1.3);
-                    
-                    // 高亮连接的节点和边
-                    const connectedLinks = links.filter(l => 
-                        l.source.id === d.id || l.target.id === d.id
-                    );
-                    
+                    d3.select(this).transition().duration(200).attr("r", d.radius * 1.3);
+                    const connectedLinks = links.filter(l => l.source.id === d.id || l.target.id === d.id);
                     const connectedNodeIds = new Set();
-                    connectedLinks.forEach(l => {
-                        if (l.source.id === d.id) connectedNodeIds.add(l.target.id);
-                        if (l.target.id === d.id) connectedNodeIds.add(l.source.id);
-                    });
-                    
-                    link.transition()
-                        .duration(200)
-                        .attr("stroke-opacity", l => 
-                            (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2
-                        )
-                        .attr("stroke-width", l => 
-                            (l.source.id === d.id || l.target.id === d.id) ? 3 : 2
-                        );
-                    
-                    node.transition()
-                        .duration(200)
-                        .attr("opacity", n => 
-                            n.id === d.id || connectedNodeIds.has(n.id) ? 1 : 0.3
-                        );
-                    
-                    labels.transition()
-                        .duration(200)
-                        .attr("opacity", n => 
-                            n.id === d.id || connectedNodeIds.has(n.id) ? 1 : 0.3
-                        );
-                    
+                    connectedLinks.forEach(l => { if (l.source.id === d.id) connectedNodeIds.add(l.target.id); if (l.target.id === d.id) connectedNodeIds.add(l.source.id); });
+                    link.transition().duration(200).attr("stroke-opacity", l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2).attr("stroke-width", l => (l.source.id === d.id || l.target.id === d.id) ? 3 : 2);
+                    node.transition().duration(200).attr("opacity", n => n.id === d.id || connectedNodeIds.has(n.id) ? 1 : 0.3);
+                    labels.transition().duration(200).attr("opacity", n => n.id === d.id || connectedNodeIds.has(n.id) ? 1 : 0.3);
                     showNotification(`节点: ${d.id}`);
-                })
-                .on("mouseout", function(event, d) {
-                    // 恢复原状
-                    d3.select(this)
-                        .transition()
-                        .duration(200)
-                        .attr("r", d.radius);
-                    
-                    link.transition()
-                        .duration(200)
-                        .attr("stroke-opacity", 0.6)
-                        .attr("stroke-width", 2);
-                    
-                    node.transition()
-                        .duration(200)
-                        .attr("opacity", 1);
-                    
-                    labels.transition()
-                        .duration(200)
-                        .attr("opacity", 1);
+                }).on("mouseout", function(event, d) {
+                    d3.select(this).transition().duration(200).attr("r", d.radius);
+                    link.transition().duration(200).attr("stroke-opacity", 0.6).attr("stroke-width", 2);
+                    node.transition().duration(200).attr("opacity", 1);
+                    labels.transition().duration(200).attr("opacity", 1);
                 });
-                
-                // 更新位置
                 simulation.on("tick", () => {
-                    link
-                        .attr("x1", d => d.source.x)
-                        .attr("y1", d => d.source.y)
-                        .attr("x2", d => d.target.x)
-                        .attr("y2", d => d.target.y);
-                    
-                    node
-                        .attr("cx", d => d.x)
-                        .attr("cy", d => d.y);
-                    
-                    labels
-                        .attr("x", d => d.x)
-                        .attr("y", d => d.y);
+                    link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                    node.attr("cx", d => d.x).attr("cy", d => d.y);
+                    labels.attr("x", d => d.x).attr("y", d => d.y);
                 });
-                
-                // 拖拽函数
-                function dragstarted(event, d) {
-                    if (!event.active) simulation.alphaTarget(0.3).restart();
-                    d.fx = d.x;
-                    d.fy = d.y;
-                }
-                
-                function dragged(event, d) {
-                    d.fx = event.x;
-                    d.fy = event.y;
-                }
-                
-                function dragended(event, d) {
-                    if (!event.active) simulation.alphaTarget(0);
-                    d.fx = null;
-                    d.fy = null;
-                }
-                
-                // 初始缩放以适应容器
-                const initialScale = 0.8;
-                const initialX = (width - width * initialScale) / 2;
-                const initialY = (height - height * initialScale) / 2;
-                
-                svg.call(zoom.transform, d3.zoomIdentity
-                    .translate(initialX, initialY)
-                    .scale(initialScale));
-                
-                // 缩放控制按钮
-                document.getElementById('zoomInBtn').addEventListener('click', () => {
-                    svg.transition().duration(300).call(zoom.scaleBy, 1.3);
-                });
-                
-                document.getElementById('zoomOutBtn').addEventListener('click', () => {
-                    svg.transition().duration(300).call(zoom.scaleBy, 0.7);
-                });
-                
-                document.getElementById('resetViewBtn').addEventListener('click', () => {
-                    svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity
-                        .translate(initialX, initialY)
-                        .scale(initialScale));
-                });
+                function dragstarted(event, d) { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+                function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+                function dragended(event, d) { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+                const initialScale = 0.8; const initialX = (width - width * initialScale) / 2; const initialY = (height - height * initialScale) / 2;
+                svg.call(zoom.transform, d3.zoomIdentity.translate(initialX, initialY).scale(initialScale));
+                document.getElementById('zoomInBtn').addEventListener('click', () => { svg.transition().duration(300).call(zoom.scaleBy, 1.3); });
+                document.getElementById('zoomOutBtn').addEventListener('click', () => { svg.transition().duration(300).call(zoom.scaleBy, 0.7); });
+                document.getElementById('resetViewBtn').addEventListener('click', () => { svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity.translate(initialX, initialY).scale(initialScale)); });
             }
             
-            // 创建柱状图
             function createBarChart() {
-                // 清空容器
                 barChart.innerHTML = '';
-                
-                // 创建柱状图组
                 barData.forEach((group, groupIndex) => {
-                    const barGroup = document.createElement('div');
-                    barGroup.className = 'bar-group';
-                    
-                    // 创建三个柱子
+                    const barGroup = document.createElement('div'); barGroup.className = 'bar-group';
                     for (let i = 0; i < 3; i++) {
-                        const bar = document.createElement('div');
-                        bar.className = 'bar';
-                        bar.style.height = '0%'; // 初始高度为0，将通过动画设置
-                        bar.style.background = `linear-gradient(to top, ${group.colors[i]}, ${darkenColor(group.colors[i], 20)})`;
-                        
-                        const barValue = document.createElement('div');
-                        barValue.className = 'bar-value';
-                        barValue.textContent = `${group.values[i]}%`;
-                        
-                        bar.appendChild(barValue);
-                        barGroup.appendChild(bar);
-                        
-                        // 延迟设置高度，创建动画效果
-                        setTimeout(() => {
-                            bar.style.height = `${group.values[i]}%`;
-                        }, 100 + (groupIndex * 100) + (i * 50));
+                        const bar = document.createElement('div'); bar.className = 'bar';
+                        bar.style.height = '0%'; bar.style.background = `linear-gradient(to top, ${group.colors[i]}, ${darkenColor(group.colors[i], 20)})`;
+                        const barValue = document.createElement('div'); barValue.className = 'bar-value'; barValue.textContent = `${group.values[i]}%`;
+                        bar.appendChild(barValue); barGroup.appendChild(bar);
+                        setTimeout(() => { bar.style.height = `${group.values[i]}%`; }, 100 + (groupIndex * 100) + (i * 50));
                     }
-                    
-                    // 添加标签
-                    const barLabel = document.createElement('div');
-                    barLabel.className = 'bar-label';
-                    barLabel.textContent = group.label;
-                    barGroup.appendChild(barLabel);
-                    
-                    barChart.appendChild(barGroup);
+                    const barLabel = document.createElement('div'); barLabel.className = 'bar-label'; barLabel.textContent = group.label;
+                    barGroup.appendChild(barLabel); barChart.appendChild(barGroup);
                 });
             }
             
-            // 模拟器功能初始化
             function initSimulator() {
-                // 策略选择
-                document.querySelectorAll('#strategyOptions .control-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        const strategy = this.getAttribute('data-strategy');
-                        
-                        // 移除其他选项的选择状态
-                        document.querySelectorAll('#strategyOptions .control-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        
-                        // 设置当前选项为选中状态
-                        this.classList.add('selected');
-                        userSelections.strategy = strategy;
-                        
-                        updatePreview();
-                    });
-                });
-                
-                // 媒体选择
-                document.querySelectorAll('#mediaOptions .control-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        const media = this.getAttribute('data-media');
-                        
-                        // 移除其他选项的选择状态
-                        document.querySelectorAll('#mediaOptions .control-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        
-                        // 设置当前选项为选中状态
-                        this.classList.add('selected');
-                        userSelections.media = media;
-                        
-                        updatePreview();
-                    });
-                });
-                
-                // 受众选择
-                document.querySelectorAll('#audienceOptions .control-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        const audience = this.getAttribute('data-audience');
-                        
-                        // 移除其他选项的选择状态
-                        document.querySelectorAll('#audienceOptions .control-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        
-                        // 设置当前选项为选中状态
-                        this.classList.add('selected');
-                        userSelections.audience = audience;
-                        
-                        updatePreview();
-                    });
-                });
-                
-                // 生成按钮
+                document.querySelectorAll('#strategyOptions .control-option').forEach(opt => opt.addEventListener('click', function() {
+                    document.querySelectorAll('#strategyOptions .control-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected'); userSelections.strategy = this.getAttribute('data-strategy'); updatePreview();
+                }));
+                document.querySelectorAll('#mediaOptions .control-option').forEach(opt => opt.addEventListener('click', function() {
+                    document.querySelectorAll('#mediaOptions .control-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected'); userSelections.media = this.getAttribute('data-media'); updatePreview();
+                }));
+                document.querySelectorAll('#audienceOptions .control-option').forEach(opt => opt.addEventListener('click', function() {
+                    document.querySelectorAll('#audienceOptions .control-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected'); userSelections.audience = this.getAttribute('data-audience'); updatePreview();
+                }));
                 document.getElementById('generateBtn').addEventListener('click', generatePlan);
-                
-                // 重置按钮
                 document.getElementById('resetBtn').addEventListener('click', resetSimulator);
-                
-                // 初始预览
                 updatePreview();
             }
             
-            // 更新预览
             function updatePreview() {
-                const previewContent = document.getElementById('previewContent');
-                previewContent.innerHTML = '';
-                
+                const previewContent = document.getElementById('previewContent'); previewContent.innerHTML = '';
                 if (!userSelections.strategy && !userSelections.media && !userSelections.audience) {
-                    previewContent.innerHTML = `
-                        <div class="preview-item">
-                            <div class="preview-item-title">等待选择</div>
-                            <div class="preview-item-desc">请选择策略、媒体和受众以预览方案</div>
-                        </div>
-                    `;
+                    previewContent.innerHTML = `<div class="preview-item"><div class="preview-item-title">等待选择</div><div class="preview-item-desc">请选择策略、媒体和受众以预览方案</div></div>`;
                     return;
                 }
-                
-                if (userSelections.strategy) {
-                    const strategy = simulatorData.strategies[userSelections.strategy];
-                    previewContent.innerHTML += `
-                        <div class="preview-item">
-                            <div class="preview-item-title">策略: ${strategy.name}</div>
-                            <div class="preview-item-desc">${strategy.description}</div>
-                        </div>
-                    `;
-                }
-                
-                if (userSelections.media) {
-                    const mediaKey = userSelections.media === 'rmrb' ? 'rmr' : userSelections.media;
-                    const media = simulatorData.media[mediaKey];
-                    previewContent.innerHTML += `
-                        <div class="preview-item">
-                            <div class="preview-item-title">媒体: ${media.name}</div>
-                            <div class="preview-item-desc">${media.description}</div>
-                        </div>
-                    `;
-                }
-                
-                if (userSelections.audience) {
-                    const audience = simulatorData.audiences[userSelections.audience];
-                    previewContent.innerHTML += `
-                        <div class="preview-item">
-                            <div class="preview-item-title">受众: ${audience.name}</div>
-                            <div class="preview-item-desc">${audience.description}</div>
-                        </div>
-                    `;
-                }
+                if (userSelections.strategy) { const s = simulatorData.strategies[userSelections.strategy]; previewContent.innerHTML += `<div class="preview-item"><div class="preview-item-title">策略: ${s.name}</div><div class="preview-item-desc">${s.description}</div></div>`; }
+                if (userSelections.media) { const mediaKey = userSelections.media === 'rmrb' ? 'rmr' : userSelections.media; const m = simulatorData.media[mediaKey]; previewContent.innerHTML += `<div class="preview-item"><div class="preview-item-title">媒体: ${m.name}</div><div class="preview-item-desc">${m.description}</div></div>`; }
+                if (userSelections.audience) { const a = simulatorData.audiences[userSelections.audience]; previewContent.innerHTML += `<div class="preview-item"><div class="preview-item-title">受众: ${a.name}</div><div class="preview-item-desc">${a.description}</div></div>`; }
             }
             
-            // 生成传播方案
             function generatePlan() {
-                // 检查是否已选择所有选项
-                if (!userSelections.strategy || !userSelections.media || !userSelections.audience) {
-                    showNotification('请先选择策略、媒体和受众');
-                    return;
-                }
-                
-                const resultContainer = document.getElementById('resultContainer');
-                const resultStats = document.getElementById('resultStats');
-                const resultDetails = document.getElementById('resultDetails');
-                const resultFeatures = document.getElementById('resultFeatures');
-                
-                // 获取数据
-                const strategy = simulatorData.strategies[userSelections.strategy];
-                const mediaKey = userSelections.media === 'rmrb' ? 'rmr' : userSelections.media;
-                const media = simulatorData.media[mediaKey];
-                const audience = simulatorData.audiences[userSelections.audience];
-                
-                // 计算匹配度
-                const compatibility = media.compatibility[userSelections.strategy];
-                const preference = audience.preference[userSelections.strategy];
-                const overallScore = Math.round((compatibility + preference + strategy.impact) / 3);
-                
-                // 生成方案名称
+                if (!userSelections.strategy || !userSelections.media || !userSelections.audience) { showNotification('请先选择策略、媒体和受众'); return; }
+                const resultContainer = document.getElementById('resultContainer'); const resultStats = document.getElementById('resultStats'); const resultDetails = document.getElementById('resultDetails'); const resultFeatures = document.getElementById('resultFeatures');
+                const strategy = simulatorData.strategies[userSelections.strategy]; const mediaKey = userSelections.media === 'rmrb' ? 'rmr' : userSelections.media; const media = simulatorData.media[mediaKey]; const audience = simulatorData.audiences[userSelections.audience];
+                const compatibility = media.compatibility[userSelections.strategy]; const preference = audience.preference[userSelections.strategy]; const overallScore = Math.round((compatibility + preference + strategy.impact) / 3);
                 const planName = `${media.name} × ${strategy.name} × ${audience.name}青春化传播方案`;
-                
-                // 生成方案详情
                 let planDetails = '';
-                
-                if (userSelections.strategy === 'voice') {
-                    planDetails = `该方案聚焦于"语态转化"，建议${media.name}邀请青年专家或青年代表，将专业内容转化为青年易于理解的语言和故事。针对${audience.name}的特点，可采用短视频、动漫、直播对话等形式，建立情感连接和价值认同。`;
-                } else if (userSelections.strategy === 'tech') {
-                    planDetails = `该方案聚焦于"技术驱动"，建议${media.name}运用AI生成、VR/AR、数据可视化等前沿技术，将内容转化为互动式、沉浸式体验。针对${audience.name}的特点，可开发H5互动产品、AI生成内容、虚拟展览等形式，提升参与感和传播力。`;
-                } else {
-                    planDetails = `该方案聚焦于"IP焕新"，建议${media.name}重塑其文化IP，融入青年文化元素和表达方式。针对${audience.name}的特点，可通过年轻主创团队、社交媒体联动、代际对话等形式，实现品牌年轻化和代际共鸣。`;
-                }
-                
-                // 生成特点
+                if (userSelections.strategy === 'voice') planDetails = `该方案聚焦于"语态转化"，建议${media.name}邀请青年专家或青年代表，将专业内容转化为青年易于理解的语言和故事。针对${audience.name}的特点，可采用短视频、动漫、直播对话等形式，建立情感连接和价值认同。`;
+                else if (userSelections.strategy === 'tech') planDetails = `该方案聚焦于"技术驱动"，建议${media.name}运用AI生成、VR/AR、数据可视化等前沿技术，将内容转化为互动式、沉浸式体验。针对${audience.name}的特点，可开发H5互动产品、AI生成内容、虚拟展览等形式，提升参与感和传播力。`;
+                else planDetails = `该方案聚焦于"IP焕新"，建议${media.name}重塑其文化IP，融入青年文化元素和表达方式。针对${audience.name}的特点，可通过年轻主创团队、社交媒体联动、代际对话等形式，实现品牌年轻化和代际共鸣。`;
                 const features = [...strategy.features];
                 if (userSelections.media === 'gmw') features.push('理论深度', '价值引领');
                 if (userSelections.media === 'rmrb') features.push('权威发布', '全网传播');
                 if (userSelections.media === 'cctv') features.push('国民级平台', '文化影响力');
-                
-                // 更新结果统计
-                resultStats.innerHTML = `
-                    <div class="result-stat">
-                        <div class="result-stat-value">${overallScore}%</div>
-                        <div class="result-stat-label">方案匹配度</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value">${compatibility}%</div>
-                        <div class="result-stat-label">媒体适配度</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value">${preference}%</div>
-                        <div class="result-stat-label">受众偏好度</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value">${strategy.impact}%</div>
-                        <div class="result-stat-label">策略影响力</div>
-                    </div>
-                `;
-                
-                // 更新方案详情
-                resultDetails.innerHTML = `
-                    <h4 style="color: #ff8c00; margin-bottom: 10px;">${planName}</h4>
-                    <p>${planDetails}</p>
-                    <p>该方案预计可提升年轻受众关注度${overallScore-20}%，增强内容互动性${compatibility-15}%，提升价值认同感${preference-10}%。</p>
-                `;
-                
-                // 更新特点
-                resultFeatures.innerHTML = '';
-                features.forEach(feature => {
-                    const featureEl = document.createElement('div');
-                    featureEl.className = 'result-feature';
-                    featureEl.textContent = feature;
-                    resultFeatures.appendChild(featureEl);
-                });
-                
-                // 显示结果
+                resultStats.innerHTML = `<div class="result-stat"><div class="result-stat-value">${overallScore}%</div><div class="result-stat-label">方案匹配度</div></div><div class="result-stat"><div class="result-stat-value">${compatibility}%</div><div class="result-stat-label">媒体适配度</div></div><div class="result-stat"><div class="result-stat-value">${preference}%</div><div class="result-stat-label">受众偏好度</div></div><div class="result-stat"><div class="result-stat-value">${strategy.impact}%</div><div class="result-stat-label">策略影响力</div></div>`;
+                resultDetails.innerHTML = `<h4 style="color: #ff8c00; margin-bottom: 10px;">${planName}</h4><p>${planDetails}</p><p>该方案预计可提升年轻受众关注度${overallScore-20}%，增强内容互动性${compatibility-15}%，提升价值认同感${preference-10}%。</p>`;
+                resultFeatures.innerHTML = ''; features.forEach(feature => { const f = document.createElement('div'); f.className = 'result-feature'; f.textContent = feature; resultFeatures.appendChild(f); });
                 resultContainer.classList.add('active');
-                
-                // 滚动到结果区域
-                setTimeout(() => {
-                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);
-                
+                setTimeout(() => { resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
                 showNotification('传播方案已生成！');
             }
             
-            // 重置模拟器
             function resetSimulator() {
-                // 清除选择
-                userSelections = {
-                    strategy: null,
-                    media: null,
-                    audience: null
-                };
-                
-                // 清除选择状态
-                document.querySelectorAll('.control-option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-                
-                // 清除结果
+                userSelections = { strategy: null, media: null, audience: null };
+                document.querySelectorAll('.control-option').forEach(opt => opt.classList.remove('selected'));
                 document.getElementById('resultContainer').classList.remove('active');
-                
-                // 更新预览
-                updatePreview();
-                
-                showNotification('模拟器已重置');
+                updatePreview(); showNotification('模拟器已重置');
             }
             
-            // 加深颜色函数
             function darkenColor(color, percent) {
-                const num = parseInt(color.replace("#", ""), 16);
-                const amt = Math.round(2.55 * percent);
-                const R = (num >> 16) - amt;
-                const G = (num >> 8 & 0x00FF) - amt;
-                const B = (num & 0x0000FF) - amt;
-                return "#" + (
-                    0x1000000 +
-                    (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-                    (B < 255 ? B < 1 ? 0 : B : 255)
-                ).toString(16).slice(1);
+                const num = parseInt(color.replace("#", ""), 16); const amt = Math.round(2.55 * percent);
+                const R = (num >> 16) - amt; const G = (num >> 8 & 0x00FF) - amt; const B = (num & 0x0000FF) - amt;
+                return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
             }
             
-            // 显示通知
             function showNotification(message) {
                 const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #ff8c00, #ff4500);
-                    color: white;
-                    padding: 12px 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-                    z-index: 2000;
-                    font-weight: 500;
-                    transform: translateX(100%);
-                    transition: transform 0.3s ease;
-                `;
-                notification.textContent = message;
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(0)';
-                }, 10);
-                
-                setTimeout(() => {
-                    notification.style.transform = 'translateX(100%)';
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 300);
-                }, 2000);
+                notification.style.cssText = `position:fixed; top:20px; right:20px; background:linear-gradient(135deg,#ff8c00,#ff4500); color:white; padding:12px 20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.3); z-index:2000; font-weight:500; transform:translateX(100%); transition:transform 0.3s ease;`;
+                notification.textContent = message; document.body.appendChild(notification);
+                setTimeout(() => { notification.style.transform = 'translateX(0)'; }, 10);
+                setTimeout(() => { notification.style.transform = 'translateX(100%)'; setTimeout(() => { document.body.removeChild(notification); }, 300); }, 2000);
             }
             
-            // 词云动画
             function animateWord(wordElement) {
-                wordElement.style.transform = 'scale(1.3) rotate(5deg)';
-                wordElement.style.transition = 'transform 0.3s ease';
-                
-                setTimeout(() => {
-                    wordElement.style.transform = 'scale(1) rotate(0deg)';
-                }, 300);
+                wordElement.style.transform = 'scale(1.3) rotate(5deg)'; wordElement.style.transition = 'transform 0.3s ease';
+                setTimeout(() => { wordElement.style.transform = 'scale(1) rotate(0deg)'; }, 300);
             }
             
-            // 返回按钮点击事件
-            backButton.addEventListener('click', function() {
-                showNotification('返回时间轴页面');
-            });
+            backButton.addEventListener('click', function() { showNotification('返回时间轴页面'); });
             
-            // 页面滚动效果
             let lastScrollTop = 0;
-            mainContainer.addEventListener('scroll', function() {
-                const scrollTop = mainContainer.scrollTop;
-                
-                // 根据滚动方向调整返回按钮透明度
-                const opacity = Math.min(0.9, 0.7 + (scrollTop / 200));
-                backButton.style.opacity = opacity;
-                
-                lastScrollTop = scrollTop;
-            });
+            mainContainer.addEventListener('scroll', function() { const scrollTop = mainContainer.scrollTop; backButton.style.opacity = Math.min(0.9, 0.7 + (scrollTop / 200)); lastScrollTop = scrollTop; });
             
+            createWordCloud(); createNetworkDiagram(); createBarChart(); initSimulator();
+            setTimeout(() => { showNotification('欢迎探索2023-2024中央主流媒体青春化传播案例'); }, 800);
         });
     </script>
 </body>
 </html>
-
-
-
