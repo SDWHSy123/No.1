@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640, initial-scale=0.5, maximum-scale=0.5, user-scalable=no">
+    <title>破壁·共生：主流媒体的青春进化论</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=AlibabaPuHuiTi:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'AlibabaPuHuiTi', -apple-system, sans-serif;
+            color: #fff;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #page-container {
+            width: 640px;
+            height: 1008px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('结尾.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+        }
+
+        /* 半透明遮罩层 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 26, 0.85);
+            z-index: 1;
+        }
+
+        /* 主内容容器 */
+        .content-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow-y: auto;
+            padding: 60px 30px 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 结尾标题 */
+        .ending-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s 0.5s forwards;
+            color: #FFFFFF;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .ending-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #FFFFFF, transparent);
+            border-radius: 2px;
+        }
+
+        /* 总结内容区域 */
+        .summary-section {
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s 1s forwards;
+        }
+
+        .summary-box {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #00BCD4;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #00BCD4;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* 关键发现列表 */
+        .key-findings {
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s 1.3s forwards;
+        }
+
+        .findings-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .findings-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .finding-item {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .finding-item:hover {
+            transform: translateY(-5px);
+            border-color: #00BCD4;
+            box-shadow: 0 10px 25px rgba(0, 188, 212, 0.2);
+        }
+
+        .finding-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #00BCD4, #4CAF50);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .finding-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* 时间轴回顾 */
+        .timeline-review {
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s 1.6s forwards;
+        }
+
+        .review-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .review-container {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .review-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .review-timeline::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .review-year {
+            position: relative;
+            text-align: center;
+            width: 70px;
+        }
+
+        .year-dot {
+            width: 16px;
+            height: 16px;
+            background: #00BCD4;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .year-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 展望未来 */
+        .future-section {
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s 1.9s forwards;
+        }
+
+        .future-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .future-content {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .future-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+
+        /* 致谢部分 */
+        .acknowledgment {
+            width: 100%;
+            max-width: 580px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s 2.2s forwards;
+        }
+
+        .acknowledgment p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        /* 导航按钮 */
+        .nav-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 20, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .return-btn {
+            background: linear-gradient(135deg, #00BCD4, #0097A7);
+            color: white;
+        }
+
+        .return-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
+        }
+
+        .restart-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .restart-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* 动画关键帧 */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 640px) {
+            #page-container {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+            
+            .content-wrapper {
+                padding: 50px 20px 100px;
+            }
+            
+            .ending-title {
+                font-size: 2.3rem;
+            }
+            
+            .findings-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .review-timeline {
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+            }
+            
+            .review-timeline::before {
+                display: none;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-height: 1008px) {
+            #page-container {
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <!-- 半透明遮罩层 -->
+        <div class="overlay"></div>
+        
+        <!-- 主内容容器 -->
+        <div class="content-wrapper">
+            <!-- 结尾标题 -->
+            <h1 class="ending-title">破壁·共生：未完待续</h1>
+            
+            <!-- 总结内容 -->
+            <div class="summary-section">
+                <div class="summary-box">
+                    <h2 class="summary-title">
+                        <i class="fas fa-flag-checkered"></i>
+                        项目总结
+                    </h2>
+                    <div class="summary-content">
+                        本可视化项目系统梳理了2017-2025年间主流媒体面向青年群体的传播策略演进路径。通过八个典型案例的深度剖析，我们见证了主流媒体从单向宣导到双向奔赴、从严肃叙事到情感连接、从传统平台到全媒体生态的深刻变革。这一历程不仅是传播技术的革新，更是传播理念的重塑。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关键发现 -->
+            <div class="key-findings">
+                <h2 class="findings-title">核心发现</h2>
+                <div class="findings-list">
+                    <div class="finding-item">
+                        <div class="finding-number">1</div>
+                        <div class="finding-text">技术赋能是破壁的关键催化剂，从H5互动到AI应用，技术降低了参与门槛</div>
+                    </div>
+                    <div class="finding-item">
+                        <div class="finding-number">2</div>
+                        <div class="finding-text">情感连接比信息传递更有效，个性化、互动式内容引发青年群体共鸣</div>
+                    </div>
+                    <div class="finding-item">
+                        <div class="finding-number">3</div>
+                        <div class="finding-text">平台迁移标志着传播思维转变，从自有平台到入驻青年文化社区</div>
+                    </div>
+                    <div class="finding-item">
+                        <div class="finding-number">4</div>
+                        <div class="finding-text">青年不再是被动受众，而是内容共创者，UGC成为传播重要组成部分</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 时间轴回顾 -->
+            <div class="timeline-review">
+                <h2 class="review-title">八年演进路径</h2>
+                <div class="review-container">
+                    <div class="review-timeline">
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2017</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2018</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2019</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2020</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2021</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2022</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2023</div>
+                        </div>
+                        <div class="review-year">
+                            <div class="year-dot"></div>
+                            <div class="year-label">2024-2025</div>
+                        </div>
+                    </div>
+                    <div class="summary-content" style="text-align: center;">
+                        从"军装照H5"的破冰试水，到AI主播的智能交互；从入驻抖音B站的平台迁移，到元宇宙虚拟社区的生态构建。八年间，主流媒体完成了一次系统性的青春进化。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 展望未来 -->
+            <div class="future-section">
+                <h2 class="future-title">未来展望</h2>
+                <div class="future-content">
+                    <div class="future-text">
+                        随着AIGC、元宇宙、虚拟现实等新技术的发展，主流媒体与青年群体的对话将进入更深层次的共生阶段。未来的主流媒体传播将更加智能化、个性化、沉浸式，而青年群体将在内容创作、传播互动中扮演更加主动的角色。
+                    </div>
+                    <div class="future-text">
+                        "破壁"不是终点，"共生"才是常态。主流媒体与青年文化的融合将催生更多创新传播形态，共同构建积极向上、多元包容的网络传播生态。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 致谢 -->
+            <div class="acknowledgment">
+                <p>数据来源：人民日报、央视新闻、新华社等官方发布数据及第三方监测报告</p>
+                <p>研究方法：案例分析法、内容分析法、可视化呈现</p>
+                <p>研究时间：2017-2025</p>
+                <p>© 2025 主流媒体的青春进化论研究项目</p>
+            </div>
+        </div>
+        
+        <!-- 导航按钮 -->
+        <div class="nav-buttons">
+            <button class="nav-btn return-btn" id="returnBtn">
+                <i class="fas fa-arrow-left"></i> 返回时间轴
+            </button>
+            <button class="nav-btn restart-btn" id="restartBtn">
+                <i class="fas fa-redo"></i> 重新开始
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const returnBtn = document.getElementById('returnBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            
+            // 返回时间轴
+            returnBtn.addEventListener('click', function() {
+                // 实际项目中这里返回时间轴页面
+                window.location.href = 'https://sdwhsy123.github.io/No.1/timepage.html';
+            });
+            
+            // 重新开始
+            restartBtn.addEventListener('click', function() {
+                // 实际项目中这里返回封面页
+                window.location.href = 'https://sdwhsy123.github.io/No.1/indexpage.html';
+            });
+            
+            // 滚动动画效果
+            const animatedElements = document.querySelectorAll('.summary-section, .key-findings, .timeline-review, .future-section, .acknowledgment');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
