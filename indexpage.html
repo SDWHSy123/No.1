@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=640, initial-scale=0.5, maximum-scale=0.5, user-scalable=no">
+    <title>破壁·共生：主流媒体的青春进化论</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=AlibabaPuHuiTi:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=MaShanZheng&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'AlibabaPuHuiTi', -apple-system, sans-serif;
+            color: #fff;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #page-container {
+            width: 640px;
+            height: 1008px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('封面.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+        }
+
+        /* 内容容器 */
+        .content-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            background: rgba(10, 10, 26, 0.75);
+        }
+
+        /* 标题区域 */
+        .title-section {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 3;
+            width: 100%;
+        }
+
+        .main-title {
+            font-family: 'MaShanZheng', 'AlibabaPuHuiTi', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s 0.5s forwards;
+            letter-spacing: 6px;
+            color: #FFFFFF;
+        }
+
+        .main-title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+        }
+
+        /* 艺术化标题效果 - 破折号特殊处理 */
+        .main-title span:nth-child(3) {
+            margin: 0 15px;
+            font-size: 5rem;
+            color: #FFFFFF;
+        }
+
+        /* 标题装饰线 - 白色 */
+        .title-decoration {
+            position: relative;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFFFFF, #FFFFFF, transparent);
+            margin: 25px auto 30px;
+            opacity: 0;
+            animation: fadeIn 1s 1.2s forwards;
+        }
+
+        .title-decoration::before,
+        .title-decoration::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #FFFFFF;
+        }
+
+        .title-decoration::before {
+            left: 0;
+        }
+
+        .title-decoration::after {
+            right: 0;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.6;
+            max-width: 580px;
+            margin: 0 auto 15px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s 1.8s forwards;
+        }
+
+        .subtitle-small {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin-top: 10px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeIn 1.5s 2.2s forwards;
+        }
+
+        /* 项目说明按钮 - 白色调 */
+        .info-button {
+            margin-top: 30px;
+            padding: 12px 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1s 2.5s forwards;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+
+        .info-button:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .info-button:active {
+            transform: translateY(0);
+        }
+
+        /* 交互提示 */
+        .interaction-hint {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1s 3s forwards;
+            z-index: 4;
+        }
+
+        .hint-text {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            text-align: center;
+            background: rgba(30, 30, 46, 0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .hint-arrow {
+            width: 30px;
+            height: 30px;
+            border-right: 3px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.8);
+            transform: rotate(45deg);
+            animation: arrowBounce 1.5s infinite;
+        }
+
+        /* 项目说明浮层 - 白色调 */
+        .info-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 30px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            border-radius: 8px;
+        }
+
+        .info-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .info-content {
+            max-width: 580px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 35px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .info-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .info-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #aaa, #333, #aaa);
+            border-radius: 2px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section h3 i {
+            font-size: 1.1rem;
+            color: #777;
+        }
+
+        .info-section p {
+            line-height: 1.6;
+            color: #444;
+            font-size: 1.05rem;
+            padding-left: 25px;
+            border-left: 2px solid rgba(170, 170, 170, 0.5);
+        }
+
+        /* 关闭按钮 - 白色调 */
+        .close-info {
+            margin-top: 30px;
+            padding: 14px 35px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(170, 170, 170, 0.8);
+            border-radius: 50px;
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-info:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: #999;
+        }
+
+        /* 动画关键帧 */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% {
+                transform: rotate(45deg) translateY(0);
+            }
+            50% {
+                transform: rotate(45deg) translateY(10px);
+            }
+        }
+
+        @keyframes titleLetterAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 640px) {
+            html, body {
+                padding: 0;
+                background: #000;
+            }
+            
+            #page-container {
+                width: 100%;
+                height: 100vh;
+                max-width: 640px;
+                max-height: 1008px;
+                border-radius: 0;
+            }
+            
+            .main-title {
+                font-size: 3.8rem;
+                letter-spacing: 4px;
+            }
+            
+            .main-title span:nth-child(3) {
+                font-size: 4.2rem;
+                margin: 0 10px;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+                padding: 0 15px;
+            }
+            
+            .subtitle-small {
+                font-size: 1rem;
+            }
+            
+            .info-button {
+                padding: 10px 28px;
+                font-size: 1rem;
+            }
+            
+            .info-content {
+                padding: 25px 20px;
+                margin: 0 15px;
+                width: 95%;
+            }
+            
+            .info-title {
+                font-size: 1.8rem;
+            }
+            
+            .interaction-hint {
+                bottom: 70px;
+            }
+        }
+
+        @media (max-height: 1008px) {
+            #page-container {
+                height: 100vh;
+            }
+            
+            .main-title {
+                font-size: 3.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            
+            .info-button {
+                margin-top: 20px;
+            }
+            
+            .interaction-hint {
+                bottom: 60px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="page-container">
+        <!-- 主要内容 -->
+        <div class="content-wrapper">
+            <div class="title-section">
+                <h1 class="main-title" id="main-title">
+                    <span>破</span><span>壁</span><span>·</span><span>共</span><span>生</span>
+                </h1>
+                
+                <div class="title-decoration"></div>
+                
+                <p class="subtitle">
+                    主流媒体的青春进化论
+                </p>
+                <p class="subtitle-small">
+                    2017-2025：从单向宣导到双向奔赴的八年对话
+                </p>
+                
+                <!-- 项目说明按钮 -->
+                <button class="info-button" id="info-button">
+                    <i class="fas fa-info-circle"></i> 项目说明
+                </button>
+            </div>
+            
+            <!-- 交互提示 -->
+            <div class="interaction-hint">
+                <div class="hint-text">点击任意位置或下滑进入探索</div>
+                <div class="hint-arrow"></div>
+            </div>
+        </div>
+        
+        <!-- 项目说明浮层 -->
+        <div class="info-overlay" id="info-overlay">
+            <div class="info-content">
+                <h2 class="info-title">关于本项目</h2>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-book-open"></i> 研究背景</h3>
+                    <p>自2017年以来，主流媒体针对青少年群体的传播策略发生了系统性变革。本作品通过可视化方式展现八年来在叙事、表达、技术、平台等方面的年轻化演进路径。</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-search"></i> 研究方法</h3>
+                    <p>采用案例分析法，选取每年最具代表性的年轻化传播案例，结合数据分析、内容分析和可视化呈现，构建纵向时间轴与横向主题切面的双维分析框架。</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-database"></i> 数据来源</h3>
+                    <p>数据来源于公开媒体报道、平台官方数据、第三方监测报告及学术研究成果。所有案例均经过多源验证，确保准确性。</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3><i class="fas fa-bullseye"></i> 研究目的</h3>
+                    <p>探索主流媒体如何通过年轻化策略实现传播创新，为媒体融合与转型提供可视化参考，记录中国主流媒体与青年群体对话的八年历程。</p>
+                </div>
+                
+                <button class="close-info" id="close-info">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const mainTitle = document.getElementById('main-title');
+            const titleLetters = mainTitle.querySelectorAll('span');
+            const infoButton = document.getElementById('info-button');
+            const infoOverlay = document.getElementById('info-overlay');
+            const closeInfoBtn = document.getElementById('close-info');
+            
+            // 标题逐字显示动画
+            function animateTitleLetters() {
+                titleLetters.forEach((letter, index) => {
+                    setTimeout(() => {
+                        letter.style.animation = `titleLetterAppear 0.6s forwards`;
+                    }, index * 200 + 500);
+                });
+            }
+            
+            // 页面跳转
+            function navigateToNextPage() {
+                window.location.href = 'https://sdwhsy123.github.io/No.1/timepage.html';
+            }
+            
+            // 初始化
+            animateTitleLetters();
+            
+            // 事件监听
+            // 点击项目说明按钮
+            infoButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止事件冒泡
+                infoOverlay.classList.add('active');
+            });
+            
+            // 点击页面任意位置进入下一页
+            document.addEventListener('click', function(e) {
+                // 如果点击的是关闭按钮或信息浮层内部，不跳转
+                if (e.target === closeInfoBtn || infoOverlay.contains(e.target)) {
+                    return;
+                }
+                
+                // 如果信息浮层是打开的，点击外部关闭它
+                if (infoOverlay.classList.contains('active')) {
+                    infoOverlay.classList.remove('active');
+                    return;
+                }
+                
+                // 否则跳转到下一页
+                navigateToNextPage();
+            });
+            
+            // 关闭信息浮层
+            closeInfoBtn.addEventListener('click', function() {
+                infoOverlay.classList.remove('active');
+            });
+            
+            // 键盘支持
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    navigateToNextPage();
+                } else if (e.key === 'Escape' && infoOverlay.classList.contains('active')) {
+                    infoOverlay.classList.remove('active');
+                } else if (e.key === 'i' || e.key === 'I') {
+                    // 按I键打开项目说明
+                    infoOverlay.classList.add('active');
+                }
+            });
+            
+            // 触摸滑动支持
+            let touchStartY = 0;
+            let touchStartTime = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+                touchStartTime = Date.now();
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                const touchEndY = e.changedTouches[0].clientY;
+                const deltaY = touchEndY - touchStartY;
+                const touchDuration = Date.now() - touchStartTime;
+                
+                // 如果快速向上滑动超过50px，进入下一页
+                if (deltaY < -50 && touchDuration < 300) {
+                    navigateToNextPage();
+                }
+            });
+            
+            // 防止iOS Safari缩放
+            document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
