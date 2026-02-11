@@ -1552,22 +1552,33 @@
                 </div>
             </div>
         </div>
-<!-- 时间线导航 -->
-<div class="timeline-nav">
-    <div class="nav-buttons">
-        <a href="https://sdwhsy123.github.io/No.1/timepage.html" class="timeline-btn" style="margin: 0 auto;">
-            <i class="fas fa-stream"></i> 返回时间轴
-        </a>
         
-        <a href="https://sdwhsy123.github.io/No.1/2018page.html" class="nav-btn next">
-            <div class="nav-text">
-                <div>2018：入圈·扎根</div>
-                <div class="nav-year">央视新闻入驻抖音B站</div>
-            </div>
-            <i class="fas fa-chevron-right nav-icon"></i>
-        </a>
+        <!-- 时间线导航 -->
+        <div class="timeline-nav">
+            <div class="nav-buttons">
+                <div class="nav-btn disabled prev">
+                    <i class="fas fa-chevron-left nav-icon"></i>
+                    <div class="nav-text">
+                        <div>2016：前传</div>
+                        <div class="nav-year">年轻化传播探索初期</div>
+                    </div>
+                </div>
+                
+                <button class="timeline-btn" id="timelineBtn">
+                    <i class="fas fa-stream"></i> 返回时间轴
+                </button>
+                
+<a href="https://sdwhsy123.github.io/No.1/2018page.html" class="nav-btn next">
+    <div class="nav-text">
+        <div>2018：入圈·扎根</div>
+        <div class="nav-year">央视新闻入驻抖音B站</div>
     </div>
-</div>
+    <i class="fas fa-chevron-right nav-icon"></i>
+</a>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 页面初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -2079,9 +2090,8 @@
             
             // 返回按钮点击事件
             backButton.addEventListener('click', function() {
-                // 实际项目中这里返回时间轴页面
-                alert('返回时间轴页面（实际项目中会跳转）');
-                // window.history.back();
+                // 跳转到指定页面
+                window.location.href = "https://sdwhsy123.github.io/No.1/indexpage.html";
             });
             
             // 维度标签切换
@@ -2283,10 +2293,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
