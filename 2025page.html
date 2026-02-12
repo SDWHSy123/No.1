@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=AlibabaPuHuiTi:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ---------- 全局重置，手机画幅居中 ---------- */
+        /* ---------- 全局重置：仿2017无黑边，全屏铺满 ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -17,24 +17,21 @@
 
         html, body {
             width: 100%;
-            min-height: 100vh;
-            background: #0b0b18;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
             font-family: 'AlibabaPuHuiTi', -apple-system, sans-serif;
-            padding: 20px 0;
-            overflow-x: hidden;
         }
 
-        /* ---------- 手机画幅容器 (固定640x1008，仿2017) ---------- */
+        /* ---------- 固定画幅容器 640x1008，仿2017居中 ---------- */
         #page-container {
-            width: 100%;
-            max-width: 640px;
+            width: 640px;
             height: 1008px;
             position: relative;
             overflow: hidden;
+            margin: 0 auto;
             background: transparent;
             box-shadow: 0 25px 45px rgba(0,0,0,0.5);
             border-radius: 32px;
@@ -54,7 +51,7 @@
             z-index: 1;
         }
 
-        /* 半透遮罩 — 增强文字可读性，保留2025风格 */
+        /* 半透遮罩 — 增强文字可读性 */
         .bg-overlay {
             position: absolute;
             top: 0;
@@ -65,44 +62,30 @@
             z-index: 2;
         }
 
-        /* ---------- 2025特色装饰层 (全部绝对定位，不干扰内容) ---------- */
-        .data-stream {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 4;
-            opacity: 0.2;
-        }
-
-        .float-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 4;
-        }
-
+        /* ---------- 2025特色装饰层 ---------- */
+        .data-stream,
+        .float-particles,
         .neural-grid {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none;
+            z-index: 4;
+        }
+        .data-stream { opacity: 0.2; }
+        .float-particles { opacity: 0.3; }
+        .neural-grid {
             background-image: 
-                linear-gradient(90deg, rgba(86, 98, 246, 0.04) 1px, transparent 1px),
-                linear-gradient(rgba(86, 98, 246, 0.04) 1px, transparent 1px);
+                linear-gradient(90deg, rgba(86,98,246,0.04) 1px, transparent 1px),
+                linear-gradient(rgba(86,98,246,0.04) 1px, transparent 1px);
             background-size: 40px 40px;
             z-index: 3;
             opacity: 0.3;
-            pointer-events: none;
         }
 
-        /* 返回按钮 — 画幅内绝对定位，不再是fixed */
+        /* 返回按钮 — 画幅内绝对定位 */
         .back-button {
             position: absolute;
             top: 16px;
@@ -121,13 +104,11 @@
             border: 1px solid rgba(86,98,246,0.3);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         .back-button:hover {
             transform: translateX(-5px) scale(1.08);
             border-color: #5662f6;
             background: white;
         }
-
         .back-icon {
             font-size: 1.5rem;
             color: #5662f6;
@@ -139,7 +120,7 @@
             top: 0;
             left: 0;
             right: 0;
-            bottom: 92px;        /* 为底部导航留出高度 */
+            bottom: 92px;
             overflow-y: auto;
             overflow-x: hidden;
             z-index: 20;
@@ -147,16 +128,10 @@
             scrollbar-width: thin;
             scrollbar-color: #5662f6 rgba(255,255,255,0.2);
         }
+        .main-container::-webkit-scrollbar { width: 4px; }
+        .main-container::-webkit-scrollbar-thumb { background: #5662f6; border-radius: 10px; }
 
-        .main-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .main-container::-webkit-scrollbar-thumb {
-            background: #5662f6;
-            border-radius: 10px;
-        }
-
-        /* ---------- 时间线导航 — 画幅底部，仿2017 ---------- */
+        /* ---------- 时间线导航 — 画幅底部 ---------- */
         .timeline-nav {
             position: absolute;
             bottom: 0;
@@ -171,14 +146,12 @@
             border-bottom-left-radius: 32px;
             border-bottom-right-radius: 32px;
         }
-
         .nav-buttons {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 8px;
         }
-
         .nav-btn {
             display: flex;
             align-items: center;
@@ -195,21 +168,14 @@
             max-width: 180px;
             min-height: 54px;
         }
-
         .nav-btn:hover {
             background: rgba(86,98,246,0.08);
             border-color: rgba(86,98,246,0.4);
             transform: translateY(-2px);
         }
-
         .nav-btn.prev { justify-content: flex-start; }
         .nav-btn.next { justify-content: flex-end; text-align: right; }
-
-        .nav-icon {
-            font-size: 1.2rem;
-            color: #5662f6;
-        }
-
+        .nav-icon { font-size: 1.2rem; color: #5662f6; }
         .nav-text {
             display: flex;
             flex-direction: column;
@@ -218,7 +184,6 @@
             font-size: 0.82rem;
         }
         .nav-year { font-size: 0.68rem; opacity: 0.7; margin-top: 2px; }
-
         .timeline-btn {
             padding: 8px 18px;
             background: linear-gradient(135deg, #5662f6, #9b51e0);
@@ -236,26 +201,83 @@
         }
         .timeline-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(86,98,246,0.4); }
 
-        /* ---------- 以下为2025原版样式，适配640px画幅微调 ---------- */
+        /* ---------- 2025内容样式 ---------- */
         .page-header { padding: 15px 0 20px; text-align: center; }
-        .year-badge { font-size: 3.6rem; background: linear-gradient(45deg,#5662f6,#ff9d6b,#ff6b9d); -webkit-background-clip: text; background-clip: text; color: transparent; animation: futureGlow 3s infinite alternate; }
-        @keyframes futureGlow { 0% { filter: drop-shadow(0 0 5px rgba(86,98,246,0.5)); } 100% { filter: drop-shadow(0 0 15px rgba(255,157,107,0.8)); } }
+        .year-badge {
+            font-size: 3.6rem;
+            background: linear-gradient(45deg,#5662f6,#ff9d6b,#ff6b9d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: futureGlow 3s infinite alternate;
+        }
+        @keyframes futureGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(86,98,246,0.5)); }
+            100% { filter: drop-shadow(0 0 15px rgba(255,157,107,0.8)); }
+        }
         .year-keyword { font-size: 1.8rem; color: #ff9d6b; margin-bottom: 10px; }
         .year-subtitle { font-size: 0.98rem; color: #555; line-height: 1.6; padding: 0 5px; }
 
-        .intro-section { background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); border-radius: 16px; padding: 18px; margin: 10px 0 25px; border: 1px solid rgba(86,98,246,0.2); }
+        .intro-section {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 18px;
+            margin: 10px 0 25px;
+            border: 1px solid rgba(86,98,246,0.2);
+        }
         .intro-text { color: #444; line-height: 1.7; font-size: 0.96rem; text-align: justify; }
 
         .visualization-section { margin: 20px 0; }
-        .section-title { font-size: 1.3rem; color: #5662f6; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .visualization-container { display: grid; grid-template-columns: 1fr; gap: 18px; }
-        @media (min-width: 500px) { .visualization-container { grid-template-columns: repeat(2,1fr); } }
+        .section-title {
+            font-size: 1.3rem;
+            color: #5662f6;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .visualization-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+        @media (min-width: 500px) {
+            .visualization-container { grid-template-columns: repeat(2,1fr); }
+        }
 
-        .viz-item { background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); border-radius: 16px; padding: 16px; border: 1px solid rgba(86,98,246,0.15); box-shadow: 0 6px 14px rgba(0,0,0,0.02); }
-        .viz-title { font-size: 1.1rem; font-weight: 600; color: #5662f6; margin-bottom: 12px; display: flex; gap: 6px; }
+        .viz-item {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(86,98,246,0.15);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+        }
+        .viz-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5662f6;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 6px;
+        }
 
-        .word-cloud { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; min-height: 160px; }
-        .word-item { padding: 5px 12px; border-radius: 25px; cursor: default; transition: all 0.2s; }
+        /* ----- 词云、网络图、逻辑图（保留原样）----- */
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            min-height: 160px;
+        }
+        .word-item {
+            padding: 5px 12px;
+            border-radius: 25px;
+            cursor: default;
+            transition: all 0.2s;
+        }
         .word-item.size-1 { font-size: 0.85rem; background: rgba(86,98,246,0.1); color: #5662f6; }
         .word-item.size-2 { font-size: 1rem; background: rgba(255,157,107,0.1); color: #ff9d6b; }
         .word-item.size-3 { font-size: 1.15rem; background: rgba(255,107,157,0.1); color: #ff6b9d; }
@@ -263,71 +285,348 @@
         .word-item.size-5 { font-size: 1.5rem; background: rgba(255,193,7,0.1); color: #ffc107; }
 
         .network-graph { width: 100%; height: 170px; position: relative; }
-        .node { position: absolute; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .connection { position: absolute; height: 2px; background: rgba(86,98,246,0.25); transform-origin: 0 0; z-index: 1; }
-
+        .node {
+            position: absolute;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; color: white; font-size: 0.8rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: rgba(86,98,246,0.25);
+            transform-origin: 0 0;
+            z-index: 1;
+        }
         .logic-diagram { width: 100%; height: 170px; position: relative; }
-        .logic-container { width: 100%; height: 100%; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr); gap: 6px; }
-        .logic-item { background: rgba(255,255,255,0.9); border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.75rem; padding: 5px; border: 1px solid; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .logic-container {
+            width: 100%; height: 100%;
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            grid-template-rows: repeat(3,1fr);
+            gap: 6px;
+        }
+        .logic-item {
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; font-size: 0.75rem; padding: 5px;
+            border: 1px solid; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
 
-        .trend-overview { margin: 25px 0; }
-        .trend-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 540px) { .trend-grid { grid-template-columns: repeat(2, 1fr); } }
-        .trend-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); border-radius: 20px; padding: 22px; border: 1px solid rgba(86,98,246,0.2); }
-        .trend-icon { font-size: 2.2rem; margin-bottom: 12px; }
-        .trend-title { font-size: 1.3rem; font-weight: 700; color: #333; margin-bottom: 12px; }
-        .trend-description { color: #555; line-height: 1.6; font-size: 0.95rem; }
-        .trend-stats { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(86,98,246,0.1); display: flex; justify-content: space-between; color: #666; font-size: 0.82rem; }
+        /* ---------- 案例板块修复：默认隐藏，仅.active显示 ---------- */
+        .case-content {
+            display: none;
+        }
+        .case-content.active {
+            display: block;
+        }
 
         .case-showcase { margin: 25px 0; }
-        .case-tabs { display: flex; background: rgba(255,255,255,0.9); border-radius: 14px; padding: 5px; margin-bottom: 20px; overflow-x: auto; gap: 4px; }
-        .case-tab { flex: 1; min-width: 130px; padding: 12px 6px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: 500; color: #666; white-space: nowrap; font-size: 0.82rem; transition: all 0.2s; }
-        .case-tab.active { background: linear-gradient(135deg, rgba(86,98,246,0.2), rgba(255,157,107,0.2)); color: #5662f6; box-shadow: 0 3px 10px rgba(86,98,246,0.1); }
-        .case-detail { background: rgba(255,255,255,0.9); border-radius: 20px; padding: 22px; border-left: 4px solid #5662f6; }
+        .case-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.9);
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            gap: 4px;
+        }
+        .case-tab {
+            flex: 1;
+            min-width: 130px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+        }
+        .case-tab.active {
+            background: linear-gradient(135deg, rgba(86,98,246,0.2), rgba(255,157,107,0.2));
+            color: #5662f6;
+            box-shadow: 0 3px 10px rgba(86,98,246,0.1);
+        }
+        .case-detail {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 22px;
+            border-left: 4px solid #5662f6;
+        }
         .case-name { font-size: 1.5rem; font-weight: 700; color: #333; }
-        .case-tag { display: inline-block; background: rgba(86,98,246,0.1); padding: 5px 16px; border-radius: 20px; color: #5662f6; font-size: 0.8rem; }
-        .case-features { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 20px 0; }
-        @media (min-width: 500px) { .case-features { grid-template-columns: repeat(3,1fr); } }
-        .feature-item { background: white; border-radius: 14px; padding: 16px; border: 1px solid rgba(86,98,246,0.1); }
-        .feature-title { font-weight: 600; color: #9b51e0; margin-bottom: 8px; font-size: 1rem; }
-        .case-stats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-top: 25px; }
-        @media (min-width: 480px) { .case-stats-grid { grid-template-columns: repeat(4,1fr); } }
-        .case-stat { background: rgba(255,255,255,0.8); border-radius: 14px; padding: 14px; text-align: center; border: 1px solid rgba(86,98,246,0.1); }
+        .case-tag {
+            display: inline-block;
+            background: rgba(86,98,246,0.1);
+            padding: 5px 16px;
+            border-radius: 20px;
+            color: #5662f6;
+            font-size: 0.8rem;
+        }
+        .case-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        @media (min-width: 500px) {
+            .case-features { grid-template-columns: repeat(3,1fr); }
+        }
+        .feature-item {
+            background: white;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(86,98,246,0.1);
+        }
+        .feature-title {
+            font-weight: 600;
+            color: #9b51e0;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .case-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+        @media (min-width: 480px) {
+            .case-stats-grid { grid-template-columns: repeat(4,1fr); }
+        }
+        .case-stat {
+            background: rgba(255,255,255,0.8);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid rgba(86,98,246,0.1);
+        }
         .stat-value { font-size: 1.6rem; font-weight: 700; color: #5662f6; line-height: 1.2; }
         .stat-label { font-size: 0.8rem; color: #666; }
 
+        /* ---------- 趋势板块 · 仿2017维度切换 ---------- */
+        .trend-overview {
+            margin: 25px 0;
+        }
+        /* 标签栏 — 完全参考2017四维分析样式，颜色适配2025 */
+        .trend-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            gap: 4px;
+        }
+        .trend-tab {
+            flex: 1;
+            min-width: 110px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .trend-tab.active {
+            background: linear-gradient(135deg, rgba(86,98,246,0.2), rgba(255,157,107,0.2));
+            color: #5662f6;
+            box-shadow: 0 3px 10px rgba(86,98,246,0.1);
+        }
+        .trend-content {
+            display: none;
+        }
+        .trend-content.active {
+            display: block;
+        }
+        /* 趋势卡片本身样式不变，置于内容容器中时去除多余边距 */
+        .trend-content .trend-card {
+            margin: 0;
+            width: 100%;
+        }
+        .trend-card {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 22px;
+            border: 1px solid rgba(86,98,246,0.2);
+        }
+        .trend-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .trend-title { font-size: 1.3rem; font-weight: 700; color: #333; margin-bottom: 12px; }
+        .trend-description { color: #555; line-height: 1.6; font-size: 0.95rem; }
+        .trend-stats {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(86,98,246,0.1);
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.82rem;
+        }
+
+        /* ---------- AI协同创作体验区（完全保留）---------- */
         .ai-creator-section { margin: 30px 0 20px; position: relative; z-index: 30; }
-        .ai-creator-container { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-radius: 24px; padding: 22px; border: 1px solid rgba(86,98,246,0.2); }
-        .creator-title { font-size: 1.5rem; font-weight: 600; color: #5662f6; margin-bottom: 12px; display: flex; gap: 10px; }
-        .creator-workspace { display: grid; grid-template-columns: 1fr; gap: 25px; }
-        @media (min-width: 600px) { .creator-workspace { grid-template-columns: 1fr 1fr; } }
-        .control-group { background: rgba(255,255,255,0.8); border-radius: 16px; padding: 18px; border: 1px solid rgba(86,98,246,0.1); }
-        .control-title { font-size: 1.1rem; font-weight: 600; color: #9b51e0; margin-bottom: 15px; }
-        .control-options { display: flex; flex-wrap: wrap; gap: 10px; }
-        .control-option { padding: 8px 16px; background: white; border-radius: 30px; cursor: pointer; border: 1px solid rgba(86,98,246,0.2); font-size: 0.9rem; transition: all 0.2s; }
-        .control-option.active { background: rgba(86,98,246,0.2); border-color: #5662f6; color: #5662f6; box-shadow: 0 0 10px rgba(86,98,246,0.2); }
-        .text-input { width: 100%; padding: 14px; border: 1px solid rgba(86,98,246,0.2); border-radius: 12px; font-family: inherit; resize: none; font-size: 0.95rem; }
-
-        .ai-process { background: rgba(248,249,255,0.9); border-radius: 18px; padding: 18px; border: 2px solid rgba(86,98,246,0.3); min-height: 240px; }
-        .process-title { font-size: 1.1rem; font-weight: 600; color: #9b51e0; margin-bottom: 18px; text-align: center; }
-        .process-steps { display: flex; flex-direction: column; gap: 14px; }
-        .process-step { display: flex; align-items: center; gap: 14px; padding: 12px; background: white; border-radius: 12px; border: 1px solid rgba(86,98,246,0.1); opacity: 0.7; }
-        .process-step.active { opacity: 1; background: rgba(86,98,246,0.12); border-color: rgba(86,98,246,0.3); }
-        .step-icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(86,98,246,0.2); display: flex; align-items: center; justify-content: center; color: #5662f6; font-weight: 600; }
-        .ai-output { background: rgba(248,249,255,0.9); border-radius: 18px; padding: 20px; border: 2px solid rgba(255,157,107,0.3); min-height: 180px; }
-        .output-title { font-size: 1.1rem; font-weight: 600; color: #ff6b9d; margin-bottom: 16px; text-align: center; }
-
-        .action-buttons { display: flex; gap: 16px; margin-top: 25px; }
-        .action-btn { flex: 1; padding: 14px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s; }
+        .ai-creator-container {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 22px;
+            border: 1px solid rgba(86,98,246,0.2);
+        }
+        .creator-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #5662f6;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 10px;
+        }
+        .creator-workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        @media (min-width: 600px) {
+            .creator-workspace { grid-template-columns: 1fr 1fr; }
+        }
+        .control-group {
+            background: rgba(255,255,255,0.8);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(86,98,246,0.1);
+        }
+        .control-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #9b51e0;
+            margin-bottom: 15px;
+        }
+        .control-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .control-option {
+            padding: 8px 16px;
+            background: white;
+            border-radius: 30px;
+            cursor: pointer;
+            border: 1px solid rgba(86,98,246,0.2);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .control-option.active {
+            background: rgba(86,98,246,0.2);
+            border-color: #5662f6;
+            color: #5662f6;
+            box-shadow: 0 0 10px rgba(86,98,246,0.2);
+        }
+        .text-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(86,98,246,0.2);
+            border-radius: 12px;
+            font-family: inherit;
+            resize: none;
+            font-size: 0.95rem;
+        }
+        .ai-process {
+            background: rgba(248,249,255,0.9);
+            border-radius: 18px;
+            padding: 18px;
+            border: 2px solid rgba(86,98,246,0.3);
+            min-height: 240px;
+        }
+        .process-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #9b51e0;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid rgba(86,98,246,0.1);
+            opacity: 0.7;
+        }
+        .process-step.active {
+            opacity: 1;
+            background: rgba(86,98,246,0.12);
+            border-color: rgba(86,98,246,0.3);
+        }
+        .step-icon {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: rgba(86,98,246,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: #5662f6; font-weight: 600;
+        }
+        .ai-output {
+            background: rgba(248,249,255,0.9);
+            border-radius: 18px;
+            padding: 20px;
+            border: 2px solid rgba(255,157,107,0.3);
+            min-height: 180px;
+        }
+        .output-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff6b9d;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 25px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
         .generate-btn { background: linear-gradient(135deg, #5662f6, #ff9d6b); color: white; }
         .reset-btn { background: white; color: #333; border: 1px solid rgba(86,98,246,0.2); }
 
-        /* 适配小屏幕：画幅100%宽，无圆角 */
+        /* 小屏幕适配：完全铺满，无黑边 */
         @media (max-width: 640px) {
-            #page-container { max-width: 100%; border-radius: 0; border: none; }
-            .timeline-nav { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+            #page-container {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                border: none;
+                margin: 0;
+            }
+            .timeline-nav {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
         }
-        @media (max-height: 1008px) { body { justify-content: flex-start; } }
     </style>
 </head>
 <body>
@@ -336,26 +635,26 @@
         <div class="bg-image"></div>
         <div class="bg-overlay"></div>
         
-        <!-- 2025原版装饰特效 (已适配画幅) -->
+        <!-- 装饰特效 -->
         <div class="data-stream" id="dataStream"></div>
         <div class="float-particles" id="floatParticles"></div>
         <div class="neural-grid"></div>
 
-        <!-- 返回按钮（画幅内） -->
+        <!-- 返回按钮 -->
         <div class="back-button" id="backButton">
             <div class="back-icon"><i class="fas fa-arrow-left"></i></div>
         </div>
 
         <!-- 主内容滚动区 -->
         <div class="main-container" id="mainContainer">
-            <!-- 页面标题区域 -->
+            <!-- 页面标题 -->
             <div class="page-header">
                 <div class="year-badge">2025</div>
                 <h1 class="year-keyword">智能·共生</h1>
                 <p class="year-subtitle">主流媒体与智能科技深度融合，与青年群体价值共鸣，构建"人机协同、价值引领、情感陪伴"的全新传播生态</p>
             </div>
             
-            <!-- 阐述文字区域 -->
+            <!-- 阐述文字 -->
             <div class="intro-section">
                 <p class="intro-text">
                     <strong>主流媒体与智能科技深度融合，与青年群体价值共鸣</strong>是主流媒体青春化传播的核心路径。
@@ -366,7 +665,7 @@
                 </p>
             </div>
             
-            <!-- 数据可视化区域（完整词云、网络图、逻辑图） -->
+            <!-- 数据可视化区域 -->
             <div class="visualization-section">
                 <h2 class="section-title">
                     <i class="fas fa-chart-network section-title-icon"></i>
@@ -388,31 +687,45 @@
                 </div>
             </div>
             
-            <!-- 趋势概览卡片（完整） -->
+            <!-- ===== 趋势维度 · 仿2017四维切换 ===== -->
             <div class="trend-overview">
-                <div class="trend-grid">
-                    <div class="trend-card">
-                        <div class="trend-icon value"><i class="fas fa-heart"></i></div>
-                        <h3 class="trend-title">从"流量"到"留量"的价值深耕</h3>
-                        <p class="trend-description">主流媒体不再仅追求传播广度，而是聚焦内容深度与情感温度，成为青年的"情感树洞"与"成长伙伴"。通过回应青年深层需求、提供情感价值，实现从吸引注意（流量）到建立信任（留量）的根本转变。</p>
-                        <div class="trend-stats"><span><i class="fas fa-user-friends"></i> 情感陪伴型内容增长120%</span><span><i class="fas fa-clock"></i> 用户平均停留时长+40%</span></div>
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> 趋势维度解析</h2>
+                <!-- 维度切换标签 -->
+                <div class="trend-tabs" id="trendTabs">
+                    <div class="trend-tab active" data-trend="value">价值深耕</div>
+                    <div class="trend-tab" data-trend="tech">人机协同</div>
+                    <div class="trend-tab" data-trend="dialogue">平等对话</div>
+                </div>
+                <!-- 维度内容容器 -->
+                <div class="trend-contents">
+                    <div class="trend-content active" id="trendValueContent">
+                        <div class="trend-card">
+                            <div class="trend-icon value"><i class="fas fa-heart"></i></div>
+                            <h3 class="trend-title">从"流量"到"留量"的价值深耕</h3>
+                            <p class="trend-description">主流媒体不再仅追求传播广度，而是聚焦内容深度与情感温度，成为青年的"情感树洞"与"成长伙伴"。通过回应青年深层需求、提供情感价值，实现从吸引注意（流量）到建立信任（留量）的根本转变。</p>
+                            <div class="trend-stats"><span><i class="fas fa-user-friends"></i> 情感陪伴型内容增长120%</span><span><i class="fas fa-clock"></i> 用户平均停留时长+40%</span></div>
+                        </div>
                     </div>
-                    <div class="trend-card">
-                        <div class="trend-icon tech"><i class="fas fa-robot"></i></div>
-                        <h3 class="trend-title">人机协同的智能体驱动</h3>
-                        <p class="trend-description">AI从辅助工具升级为协同创作的"智能体伙伴"，深度参与策划、生产、分发全流程。主流媒体构建垂类大模型与智能体应用，释放创作者潜能，实现"新质生产力"的质变。</p>
-                        <div class="trend-stats"><span><i class="fas fa-bolt"></i> 生产效率提升300%</span><span><i class="fas fa-brain"></i> AI参与度达65%</span></div>
+                    <div class="trend-content" id="trendTechContent">
+                        <div class="trend-card">
+                            <div class="trend-icon tech"><i class="fas fa-robot"></i></div>
+                            <h3 class="trend-title">人机协同的智能体驱动</h3>
+                            <p class="trend-description">AI从辅助工具升级为协同创作的"智能体伙伴"，深度参与策划、生产、分发全流程。主流媒体构建垂类大模型与智能体应用，释放创作者潜能，实现"新质生产力"的质变。</p>
+                            <div class="trend-stats"><span><i class="fas fa-bolt"></i> 生产效率提升300%</span><span><i class="fas fa-brain"></i> AI参与度达65%</span></div>
+                        </div>
                     </div>
-                    <div class="trend-card">
-                        <div class="trend-icon dialogue"><i class="fas fa-comments"></i></div>
-                        <h3 class="trend-title">同辈共生的平等对话</h3>
-                        <p class="trend-description">摒弃单向说教，以"同辈人"姿态真诚对话，记录不被定义的多元青年故事。80后、90后记者成为主力，用青年语态解读时政，让主流价值自然触达人心。</p>
-                        <div class="trend-stats"><span><i class="fas fa-play-circle"></i> 节目播放量超1亿</span><span><i class="fas fa-share-alt"></i> 社交分享率+75%</span></div>
+                    <div class="trend-content" id="trendDialogueContent">
+                        <div class="trend-card">
+                            <div class="trend-icon dialogue"><i class="fas fa-comments"></i></div>
+                            <h3 class="trend-title">同辈共生的平等对话</h3>
+                            <p class="trend-description">摒弃单向说教，以"同辈人"姿态真诚对话，记录不被定义的多元青年故事。80后、90后记者成为主力，用青年语态解读时政，让主流价值自然触达人心。</p>
+                            <div class="trend-stats"><span><i class="fas fa-play-circle"></i> 节目播放量超1亿</span><span><i class="fas fa-share-alt"></i> 社交分享率+75%</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- ========= 核心案例展示区（完整无省略） ========= -->
+            <!-- ===== 核心案例展示区（已修复：默认仅显示第一个） ===== -->
             <div class="case-showcase">
                 <h2 class="section-title"><i class="fas fa-star section-title-icon"></i> 2025代表性案例深度解析</h2>
                 <div class="case-tabs" id="caseTabs">
@@ -421,7 +734,7 @@
                     <div class="case-tab" data-case="dialogue"><i class="fas fa-film"></i> 《不被定义的TA》纪实系列</div>
                 </div>
                 
-                <!-- 案例1：中国青年报"Bao你脱单"情感陪伴直播（完整） -->
+                <!-- 案例1：中国青年报（默认显示） -->
                 <div class="case-content active" id="emotionalContent">
                     <div class="case-detail">
                         <div class="case-header">
@@ -452,7 +765,7 @@
                     </div>
                 </div>
                 
-                <!-- 案例2：新华社"媒体大脑3.0"智能生产平台（完整） -->
+                <!-- 案例2：新华社"媒体大脑3.0" -->
                 <div class="case-content" id="aiContent">
                     <div class="case-detail">
                         <div class="case-header">
@@ -483,7 +796,7 @@
                     </div>
                 </div>
                 
-                <!-- 案例3：央视网《不被定义的TA》青年纪实系列（完整） -->
+                <!-- 案例3：央视网《不被定义的TA》 -->
                 <div class="case-content" id="dialogueContent">
                     <div class="case-detail">
                         <div class="case-header">
@@ -515,7 +828,7 @@
                 </div>
             </div>
             
-            <!-- ========= AI协同创作体验区（完整流程步骤、完整标题生成逻辑） ========= -->
+            <!-- ===== AI协同创作体验区（完全保留） ===== -->
             <div class="ai-creator-section">
                 <div class="ai-creator-container">
                     <h2 class="creator-title"><i class="fas fa-robot"></i> 体验人机协同创作：AI标题生成实验室</h2>
@@ -569,16 +882,14 @@
             </div>
         </div> <!-- main-container 结束 -->
 
-        <!-- 时间线导航（画幅底部，仿2017） -->
+        <!-- 时间线导航（底部） -->
         <div class="timeline-nav">
             <div class="nav-buttons">
                 <a href="https://sdwhsy123.github.io/No.1/2023-2024page.html" class="nav-btn prev">
                     <i class="fas fa-chevron-left nav-icon"></i>
                     <div class="nav-text"><div>2023-2024：对话·深度</div><div class="nav-year">价值引领×生态化×深度对话</div></div>
                 </a>
-
                 <a href="https://sdwhsy123.github.io/No.1/timepage.html" class="timeline-btn"><i class="fas fa-stream"></i> 返回时间轴</a>
-
                 <a href="https://sdwhsy123.github.io/No.1/lastpage.html" class="nav-btn next">
                     <div class="nav-text"><div>尾章</div><div class="nav-year">2017-2025·主流媒体的青春进化</div></div>
                     <i class="fas fa-chevron-right nav-icon"></i>
@@ -611,12 +922,12 @@
                 const generateBtn = document.getElementById('generateBtn');
                 const resetBtn = document.getElementById('resetBtn');
 
-                // ---------- 交互状态 ----------
+                // 交互状态
                 let selectedType = 'feature';
                 let selectedTone = 'inspiring';
                 let isGenerating = false;
 
-                // ---------- 深度共生关键词云数据 ----------
+                // ---------- 数据可视化数据 ----------
                 const wordCloudData = [
                     { text: '人机协同', size: 5 }, { text: '深度共生', size: 5 }, { text: '价值共鸣', size: 4 },
                     { text: '智能体', size: 4 }, { text: '情感陪伴', size: 4 }, { text: 'AIGC', size: 3 },
@@ -626,7 +937,6 @@
                     { text: '智能科技', size: 3 }, { text: '情感树洞', size: 2 }, { text: '多元叙事', size: 2 }
                 ];
 
-                // ---------- 聚类网络图节点/连接 ----------
                 const networkNodes = [
                     { id: '核心', type: 1, x: 90, y: 90 }, { id: '智能科技', type: 2, x: 30, y: 50 },
                     { id: '青年群体', type: 3, x: 150, y: 50 }, { id: '主流媒体', type: 4, x: 30, y: 130 },
@@ -640,7 +950,6 @@
                     { from: '价值共鸣', to: '情感连接' }
                 ];
 
-                // ---------- 逻辑图数据 ----------
                 const logicItems = [
                     { id: 1, text: '智能科技赋能', type: 1, row: 1, col: 2 },
                     { id: 2, text: '主流媒体转型', type: 2, row: 2, col: 1 },
@@ -651,7 +960,7 @@
                     { id: 7, text: '深度共生生态', type: 2, row: 4, col: 2 }
                 ];
 
-                // ---------- 数据流效果 (画幅内版) ----------
+                // ---------- 装饰特效 ----------
                 function generateDataStream() {
                     if(!dataStream) return;
                     dataStream.innerHTML = '';
@@ -671,7 +980,6 @@
                     document.head.appendChild(style);
                 }
 
-                // ---------- 悬浮粒子 (画幅内) ----------
                 function generateParticles() {
                     if(!floatParticles) return;
                     floatParticles.innerHTML = '';
@@ -701,7 +1009,7 @@
                     }
                 }
 
-                // ---------- 词云图生成 ----------
+                // ---------- 可视化生成 ----------
                 function generateWordCloud() {
                     wordCloud.innerHTML = '';
                     const shuffled = [...wordCloudData].sort(() => Math.random() - 0.5);
@@ -713,7 +1021,6 @@
                     });
                 }
 
-                // ---------- 聚类网络图生成 ----------
                 function generateNetworkGraph() {
                     networkGraph.innerHTML = '';
                     networkConnections.forEach(conn => {
@@ -742,7 +1049,6 @@
                     });
                 }
 
-                // ---------- 逻辑图生成 ----------
                 function generateLogicDiagram() {
                     logicDiagram.innerHTML = '';
                     const container = document.createElement('div');
@@ -758,7 +1064,7 @@
                     logicDiagram.appendChild(container);
                 }
 
-                // ---------- 完整AI标题生成逻辑 (原版) ----------
+                // ---------- AI标题生成逻辑 ----------
                 const titleTemplates = {
                     feature: {
                         inspiring: [ "《{topic}：在{context}中寻找自己的答案》", "当{subject}遇上{challenge}，他们如何{action}？", "不止于{concept}：一群青年在{field}的{journey}" ],
@@ -814,7 +1120,6 @@
                     return title;
                 }
 
-                // ---------- 模拟AI生成过程 ----------
                 function simulateAIGeneration() {
                     if (isGenerating) return;
                     isGenerating = true;
@@ -843,21 +1148,44 @@
                 }
 
                 // ---------- 返回按钮 ----------
-            backButton.addEventListener('click', function() {
-                // 跳转到指定页面
-                window.location.href = "https://sdwhsy123.github.io/No.1/indexpage.html";
-            });
-            
-
-                // ---------- 案例切换 ----------
-                caseTabs.addEventListener('click', function(e) {
-                    const tab = e.target.closest('.case-tab');
-                    if (!tab) return;
-                    caseTabs.querySelectorAll('.case-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    caseContents.forEach(c => c.classList.remove('active'));
-                    document.getElementById(tab.dataset.case + 'Content').classList.add('active');
+                backButton.addEventListener('click', function() {
+                    window.location.href = "https://sdwhsy123.github.io/No.1/indexpage.html";
                 });
+
+                // ---------- 案例切换（修复：仅显示选中案例）----------
+                if (caseTabs) {
+                    caseTabs.addEventListener('click', function(e) {
+                        const tab = e.target.closest('.case-tab');
+                        if (!tab) return;
+                        caseTabs.querySelectorAll('.case-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        caseContents.forEach(c => c.classList.remove('active'));
+                        const targetId = tab.dataset.case + 'Content';
+                        const target = document.getElementById(targetId);
+                        if (target) target.classList.add('active');
+                    });
+                }
+
+                // ---------- 趋势维度切换（仿2017四维分析）----------
+                const trendTabs = document.getElementById('trendTabs');
+                if (trendTabs) {
+                    const tabs = trendTabs.querySelectorAll('.trend-tab');
+                    const contents = document.querySelectorAll('.trend-content');
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', function() {
+                            tabs.forEach(t => t.classList.remove('active'));
+                            this.classList.add('active');
+                            contents.forEach(c => c.classList.remove('active'));
+                            const trend = this.dataset.trend;
+                            let contentId = '';
+                            if (trend === 'value') contentId = 'trendValueContent';
+                            else if (trend === 'tech') contentId = 'trendTechContent';
+                            else if (trend === 'dialogue') contentId = 'trendDialogueContent';
+                            const targetContent = document.getElementById(contentId);
+                            if (targetContent) targetContent.classList.add('active');
+                        });
+                    });
+                }
 
                 // ---------- 内容类型选择 ----------
                 contentTypeOptions.forEach(opt => {
@@ -875,7 +1203,7 @@
                     });
                 });
 
-                // ---------- 生成&重置 ----------
+                // ---------- 生成 & 重置 ----------
                 generateBtn.addEventListener('click', simulateAIGeneration);
                 resetBtn.addEventListener('click', function() {
                     contentTypeOptions[0].click();
@@ -886,7 +1214,7 @@
                     isGenerating = false;
                 });
 
-                // ---------- 初始化所有可视化&装饰 ----------
+                // ---------- 初始化所有可视化 & 装饰 ----------
                 generateDataStream();
                 generateParticles();
                 generateWordCloud();
